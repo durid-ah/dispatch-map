@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import time
+from datetime import datetime as dt
 
 import httpx
 import pandas as pd
@@ -47,7 +48,9 @@ def poll_once(known_calls: dict[str, ActiveCall]) -> None:
         logger.info("Fetched %s active call(s)", len(calls))
 
     df = pd.DataFrame(calls)
-    print(df)
+    as_of_str = dt.strptime(as_of, '%m/%d/%Y %I:%M:%S %p').strftime("%Y-%m-%d_%H-%M-%S")
+    df.to_csv(f"./active_calls_{as_of_str}.csv", index=False)
+    # df.to_csv(f"./active_calls_{as_of('%Y-%m-%d_%H-%M-%S')}.csv", index=False)
 
 
 
