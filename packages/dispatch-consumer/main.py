@@ -1,5 +1,91 @@
-def main():
-    print("Hello from dispatch-consumer!")
+from __future__ import annotations
+
+import logging
+import time
+
+import httpx
+
+from models import ActiveCall
+from richmond_active_calls import ACTIVE_CALLS_URL, fetch_active_calls
+from richmond_active_calls import RichmondActiveCallsError
+
+POLL_INTERVAL_SECONDS = 45
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+
+def main() -> None:
+    logger.info("Starting Richmond active calls consumer")
+    logger.info("Source URL: %s", ACTIVE_CALLS_URL)
+    logger.info("Poll interval: %ss", POLL_INTERVAL_SECONDS)
+
+    known_calls: dict[str, ActiveCall] = {}
+
+    try:
+        while True:
+            poll_once(known_calls)
+            time.sleep(POLL_INTERVAL_SECONDS)
+    except KeyboardInterrupt:
+        logger.info("Shutting down")
+
+
+def poll_once(known_calls: dict[str, ActiveCall]) -> None:
+    try:
+        calls, as_of = fetch_active_calls()
+    except (httpx.HTTPError, RichmondActiveCallsError) as exc:
+        logger.error("Failed to fetch active calls: %s", exc)
+        return
+
+    if as_of:
+        logger.info("Fetched %s active call(s) as of %s", len(calls), as_of)
+    else:
+        logger.info("Fetched %s active call(s)", len(calls))
+
+    current_calls = {call.call_id: call for call in calls}
+
+    for call_id, call in current_calls.items():
+        previous = known_calls.get(call_id)
+        if previous is None:
+            logger.info(
+                "NEW %s | %s %s | %s | %s | %s",
+                call.time_received,
+                call.agency,
+                call.unit,
+                call.call_type,
+                call.location,
+                call.status,
+            )
+            continue
+
+        if previous.status != call.status:
+            logger.info(
+                "STATUS %s | %s %s | %s | %s -> %s",
+                call.time_received,
+                call.agency,
+                call.unit,
+                call.location,
+                previous.status,
+                call.status,
+            )
+
+    for call_id, previous in known_calls.items():
+        if call_id not in current_calls:
+            logger.info(
+                "CLOSED %s | %s %s | %s | %s | last status: %s",
+                previous.time_received,
+                previous.agency,
+                previous.unit,
+                previous.call_type,
+                previous.location,
+                previous.status,
+            )
+
+    known_calls.clear()
+    known_calls.update(current_calls)
 
 
 if __name__ == "__main__":
