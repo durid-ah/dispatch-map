@@ -4,6 +4,7 @@ import logging
 import time
 
 import httpx
+import pandas as pd
 
 from models import ActiveCall
 from richmond_active_calls import ACTIVE_CALLS_URL, fetch_active_calls
@@ -45,47 +46,9 @@ def poll_once(known_calls: dict[str, ActiveCall]) -> None:
     else:
         logger.info("Fetched %s active call(s)", len(calls))
 
-    current_calls = {call.call_id: call for call in calls}
+    df = pd.DataFrame(calls)
+    print(df)
 
-    for call_id, call in current_calls.items():
-        previous = known_calls.get(call_id)
-        if previous is None:
-            logger.info(
-                "NEW %s | %s %s | %s | %s | %s",
-                call.time_received,
-                call.agency,
-                call.unit,
-                call.call_type,
-                call.location,
-                call.status,
-            )
-            continue
-
-        if previous.status != call.status:
-            logger.info(
-                "STATUS %s | %s %s | %s | %s -> %s",
-                call.time_received,
-                call.agency,
-                call.unit,
-                call.location,
-                previous.status,
-                call.status,
-            )
-
-    for call_id, previous in known_calls.items():
-        if call_id not in current_calls:
-            logger.info(
-                "CLOSED %s | %s %s | %s | %s | last status: %s",
-                previous.time_received,
-                previous.agency,
-                previous.unit,
-                previous.call_type,
-                previous.location,
-                previous.status,
-            )
-
-    known_calls.clear()
-    known_calls.update(current_calls)
 
 
 if __name__ == "__main__":

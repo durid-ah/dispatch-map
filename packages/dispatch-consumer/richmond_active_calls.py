@@ -28,7 +28,7 @@ def fetch_active_calls() -> tuple[list[ActiveCall], str | None]:
         response.raise_for_status()
         return _parse_active_calls_html(response.text)
     finally:
-        client.aclose()
+        client.close()
 
 def _parse_active_calls_html(html: str) -> tuple[list[ActiveCall], str | None]:
     soup = BeautifulSoup(html, "html.parser")

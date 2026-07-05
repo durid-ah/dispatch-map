@@ -18,7 +18,6 @@ class ActiveCall:
     def call_id(self) -> str:
         key = "|".join(
             (
-                self.time_received,
                 self.agency,
                 self.unit,
                 self.call_type,
