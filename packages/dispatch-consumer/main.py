@@ -49,9 +49,7 @@ def poll_once(known_calls: dict[str, ActiveCall]) -> None:
 
     df = pd.DataFrame(calls)
     as_of_str = dt.strptime(as_of, '%m/%d/%Y %I:%M:%S %p').strftime("%Y-%m-%d_%H-%M-%S")
-    df.to_csv(f"./active_calls_{as_of_str}.csv", index=False)
-    # df.to_csv(f"./active_calls_{as_of('%Y-%m-%d_%H-%M-%S')}.csv", index=False)
-
+    df.to_csv(f"./test_data/active_calls_{as_of_str}.csv", index=False)
 
 
 if __name__ == "__main__":
