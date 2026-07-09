@@ -45,52 +45,11 @@ Dimension tables hold repeated values; fact tables store calls, status history, 
 
 ```mermaid
 erDiagram
-    agencies ||--o{ dispatch_areas : has
-    agencies ||--o{ units : operates
-    agencies ||--o{ active_calls : responds_to
+    event ||--o{ responder : has
+    responder ||--o{ responder_status_event : has
 
-    dispatch_areas ||--o{ active_calls : covers
-    units ||--o{ active_calls : assigned_to
-    call_types ||--o{ active_calls : classified_as
-    locations ||--o{ active_calls : occurs_at
-    call_statuses ||--o{ active_calls : current_status
-
-    active_calls ||--o{ call_status_events : history
-    call_statuses ||--o{ call_status_events : records
     scrape_runs ||--o{ scrape_observations : captures
     active_calls ||--o{ scrape_observations : observed_in
-
-    agencies {
-        bigint id PK
-        text code UK "RPD, RFD"
-        text name
-        timestamptz created_at
-        timestamptz updated_at
-    }
-
-    dispatch_areas {
-        bigint id PK
-        bigint agency_id FK
-        text name "Precinct 1, FIRE, DPR"
-        timestamptz created_at
-        timestamptz updated_at
-    }
-
-    units {
-        bigint id PK
-        bigint agency_id FK
-        text designation UK "113A4, E16"
-        timestamptz created_at
-        timestamptz updated_at
-    }
-
-    call_types {
-        bigint id PK
-        text description UK
-        text category "nullable"
-        timestamptz created_at
-        timestamptz updated_at
-    }
 
     locations {
         bigint id PK
@@ -101,53 +60,28 @@ erDiagram
         timestamptz updated_at
     }
 
-    call_statuses {
-        text code PK "Arrived, Enroute, Dispatched"
-        timestamptz created_at
-    }
-
-    active_calls {
+    event {
         bigint id PK
-        char external_id UK "64-char SHA-256 hex"
+        text external_id UK "char(64) hex SHA-256, derived"
         timestamptz time_received
-        bigint agency_id FK
-        bigint dispatch_area_id FK
-        bigint unit_id FK
-        bigint call_type_id FK
+        text call_type
+        text location
         bigint location_id FK
-        text status_code FK
-        timestamptz first_seen_at
-        timestamptz last_seen_at
-        boolean is_active
-        timestamptz created_at
-        timestamptz updated_at
     }
 
-    call_status_events {
+    responder {
         bigint id PK
-        bigint active_call_id FK
-        text status_code FK
-        text previous_status_code "nullable FK to call_statuses"
-        timestamptz observed_at
+        bigint event_id FK
+        text unit
+        text dispatch_area
+        text agency
         timestamptz created_at
     }
 
-    scrape_runs {
+    responder_status_event {
         bigint id PK
-        text source_url
-        timestamptz fetched_at
-        text as_of_text "nullable, page timestamp"
-        integer call_count
-        boolean success
-        text error_message "nullable"
-        timestamptz created_at
-    }
-
-    scrape_observations {
-        bigint id PK
-        bigint scrape_run_id FK
-        bigint active_call_id FK
-        text status_code FK
+        bigint responder_id FK
+        text status
         timestamptz created_at
     }
 ```
