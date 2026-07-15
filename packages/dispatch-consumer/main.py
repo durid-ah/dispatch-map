@@ -25,17 +25,15 @@ def main() -> None:
     logger.info("Source URL: %s", ACTIVE_CALLS_URL)
     logger.info("Poll interval: %ss", POLL_INTERVAL_SECONDS)
 
-    known_calls: dict[str, ActiveCall] = {}
-
     try:
         while True:
-            poll_once(known_calls)
+            poll_once()
             time.sleep(POLL_INTERVAL_SECONDS)
     except KeyboardInterrupt:
         logger.info("Shutting down")
 
 
-def poll_once(known_calls: dict[str, ActiveCall]) -> None:
+def poll_once() -> None:
     try:
         calls, as_of = fetch_active_calls()
     except (httpx.HTTPError, RichmondActiveCallsError) as exc:

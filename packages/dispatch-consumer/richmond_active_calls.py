@@ -10,7 +10,7 @@ from models import ActiveCall
 ACTIVE_CALLS_URL = (
     "https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls"
 )
-USER_AGENT = "dispatch-map/0.1.0 (+https://github.com/dispatch-map)"
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0"
 AS_OF_PATTERN = re.compile(
     r"As of\s+(.+?)\s+-\s+This page will refresh every 45 seconds"
 )
