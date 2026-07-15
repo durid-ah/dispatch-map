@@ -115,6 +115,7 @@ dependencies = [
     { name = "beautifulsoup4" },
     { name = "httpx" },
     { name = "pandas" },
+    { name = "python-dotenv" },
     { name = "sqlmodel" },
 ]
 
@@ -123,6 +124,7 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.12.0" },
     { name = "httpx", specifier = ">=0.28.0" },
     { name = "pandas", specifier = ">=3.0.3" },
+    { name = "python-dotenv", specifier = ">=1.2.2" },
     { name = "sqlmodel", specifier = ">=0.0.39" },
 ]
 

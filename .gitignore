@@ -42,3 +42,5 @@ coverage.xml
 *.py,cover
 .hypothesis/
 test_data/
+
+.env
