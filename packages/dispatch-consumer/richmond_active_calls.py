@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import re
-
+from datetime import datetime
 import httpx
-from bs4 import BeautifulSoup
+import logging
 
+from bs4 import BeautifulSoup
 from models import ActiveCall
+
+logger = logging.getLogger(__name__)
 
 ACTIVE_CALLS_URL = (
     "https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls"
@@ -61,7 +64,6 @@ def _parse_active_calls_html(html: str) -> tuple[list[ActiveCall], str | None]:
 
     return calls, as_of
 
-
 def _parse_as_of(soup: BeautifulSoup) -> str | None:
     header = soup.find("p", class_="fs-6")
     if header is None:
@@ -72,3 +74,10 @@ def _parse_as_of(soup: BeautifulSoup) -> str | None:
         return None
 
     return match.group(1)
+
+def parse_time_received(time_received: str) -> datetime | None:
+    try:
+        return datetime.strptime(time_received, "%m/%d/%Y %H:%M")
+    except ValueError as e:
+        logger.error("Failed to parse time_received '%s': %s", time_received, e)
+        return None

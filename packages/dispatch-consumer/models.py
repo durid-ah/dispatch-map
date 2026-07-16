@@ -8,12 +8,11 @@ from sqlmodel import Field, Relationship, SQLModel
 
 
 def compute_external_id(
-    agency: str,
-    unit: str,
+    time_received: str,
     call_type: str,
     location: str,
 ) -> str:
-    key = "|".join((agency, unit, call_type, location))
+    key = "|".join((time_received, call_type, location))
     return hashlib.sha256(key.encode()).hexdigest()
 
 
