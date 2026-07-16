@@ -124,8 +124,7 @@ class ActiveCall(SQLModel):
     @property
     def external_id(self) -> str:
         return compute_external_id(
-            self.agency,
-            self.unit,
+            self.time_received,
             self.call_type,
             self.location,
         )
