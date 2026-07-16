@@ -6,10 +6,10 @@ import time
 import httpx
 
 from dotenv import load_dotenv
-from richmond_active_calls import ACTIVE_CALLS_URL, fetch_active_calls, parse_time_received, RichmondActiveCallsError
+from richmond_active_calls import fetch_active_calls, parse_time_received, RichmondActiveCallsError
 from models import ActiveCall
-
-load_dotenv()
+from config import config
+from db import DB
 
 POLL_INTERVAL_SECONDS = 45
 
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 def main() -> None:
     logger.info("Starting Richmond active calls consumer")
-    logger.info("Source URL: %s", ACTIVE_CALLS_URL)
+    logger.info("Source URL: %s", config.active_calls_url)
     logger.info("Poll interval: %ss", POLL_INTERVAL_SECONDS)
 
     try:
@@ -56,8 +56,20 @@ def persist(calls: list[ActiveCall]) -> None:
 
         logger.info("Persisting call: %s", call)
 
-        # check if the events are new
-        # old events: if the 
+    external_ids = [call.external_id for call in calls]
+    with DB(config.db_url) as db:
+        events = db.get_events(external_ids)
+        logger.info("Events: %s", events)
+
+    # check if the events are new
+    # old events:
+    # ├── update old responders
+    # └── create new responders
+    # new events:
+    # ├── create new event
+    # └── create new responders
+    # └── create new responder status events
+    # └── create new location
 
 if __name__ == "__main__":
     main()

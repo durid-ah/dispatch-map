@@ -7,13 +7,10 @@ import logging
 
 from bs4 import BeautifulSoup
 from models import ActiveCall
+from config import config
 
 logger = logging.getLogger(__name__)
 
-ACTIVE_CALLS_URL = (
-    "https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls"
-)
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0"
 AS_OF_PATTERN = re.compile(
     r"As of\s+(.+?)\s+-\s+This page will refresh every 45 seconds"
 )
@@ -24,11 +21,11 @@ class RichmondActiveCallsError(Exception):
     pass
 
 def fetch_active_calls() -> tuple[list[ActiveCall], str | None]:
-    client = httpx.Client(timeout=30.0, headers={"User-Agent": USER_AGENT})
+    client = httpx.Client(timeout=30.0, headers={"User-Agent": config.user_agent})
 
     try:
-        response = client.get(ACTIVE_CALLS_URL)
-        response.raise_for_status()
+        response = client.get(config.active_calls_url)
+        response.raise_for_status() 
         return _parse_active_calls_html(response.text)
     finally:
         client.close()
