@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 import time
-from collections import defaultdict
 from datetime import datetime
 
 import httpx
@@ -15,6 +14,7 @@ from richmond_active_calls import (
 from db.models import ActiveCall
 from config import config
 from database import DB
+from util import group_by_external_id, group_existing_events
 
 POLL_INTERVAL_SECONDS = 45
 
@@ -61,19 +61,15 @@ def persist(calls: list[ActiveCall]) -> None:
         logger.info("No valid calls to persist")
         return
 
-    grouped: dict[str, list[tuple[ActiveCall, datetime]]] = defaultdict(list)
-    for call, parsed_time in valid_calls:
-        grouped[call.external_id].append((call, parsed_time))
+    grouped = group_by_external_id(valid_calls)
 
     new_events = 0
     new_responders = 0
     status_updates = 0
 
     with DB(config.db_url) as db:
-        existing = {
-            event.external_id: event
-            for event in db.get_events(list(grouped.keys()))
-        }
+        events = db.get_events(list(grouped.keys()))
+        existing = group_existing_events(events)
 
         for external_id, group in grouped.items():
             event = existing.get(external_id)
