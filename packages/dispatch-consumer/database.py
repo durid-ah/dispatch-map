@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlmodel import Session, create_engine, select
 
-from models import Event, Location, Responder, ResponderStatusEvent
+from db.models import Event, Location, Responder, ResponderStatusEvent
 
 
 class DB:

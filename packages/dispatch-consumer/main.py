@@ -12,9 +12,9 @@ from richmond_active_calls import (
     fetch_active_calls,
     parse_time_received,
 )
-from models import ActiveCall
+from db.models import ActiveCall
 from config import config
-from db import DB
+from database import DB
 
 POLL_INTERVAL_SECONDS = 45
 

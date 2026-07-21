@@ -6,7 +6,7 @@ import httpx
 import logging
 
 from bs4 import BeautifulSoup
-from models import ActiveCall
+from db.models import ActiveCall
 from config import config
 
 logger = logging.getLogger(__name__)
