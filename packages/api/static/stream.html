@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Item Stream via SSE</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        .item { border-bottom: 1px solid #eee; padding: 1em 0; }
+    </style>
+</head>
+<body>
+    <h1>Live Item Stream (SSE)</h1>
+    <div id="items"></div>
+
+    <script>
+        // Connect to the SSE endpoint
+        const eventSource = new EventSource("/items/stream");
+        const container = document.getElementById('items');
+        let receivedAny = false;
+
+        eventSource.onmessage = function(event) {
+            // Expect a JSON Item from the FastAPI server.
+            try {
+                const data = JSON.parse(event.data);
+                receivedAny = true;
+                const div = document.createElement('div');
+                div.classList.add('item');
+                div.innerHTML = `<strong>${data.name}</strong><br><small>${data.description || ""}</small>`;
+                container.appendChild(div);
+            } catch (e) {
+                console.error("Failed to parse event:", e, event.data);
+            }
+        };
+
+        eventSource.onerror = function(error) {
+            // Finite streams close when done; EventSource treats that as an error and would reconnect.
+            eventSource.close();
+            if (!receivedAny) {
+                console.error("SSE connection error", error);
+                const errDiv = document.createElement('div');
+                errDiv.style.color = "red";
+                errDiv.textContent = "SSE connection error!";
+                container.appendChild(errDiv);
+            }
+        };
+    </script>
+</body>
+</html>
