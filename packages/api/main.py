@@ -1,4 +1,4 @@
-from collections.abc import AsyncIterable, Iterable
+from collections.abc import AsyncIterable
 
 from fastapi import FastAPI
 from fastapi.sse import EventSourceResponse

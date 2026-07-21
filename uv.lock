@@ -50,11 +50,15 @@ name = "api"
 version = "0.1.0"
 source = { virtual = "packages/api" }
 dependencies = [
+    { name = "db" },
     { name = "fastapi", extra = ["standard"] },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "fastapi", extras = ["standard"], specifier = ">=0.139.0" }]
+requires-dist = [
+    { name = "db", editable = "packages/db" },
+    { name = "fastapi", extras = ["standard"], specifier = ">=0.139.0" },
+]
 
 [[package]]
 name = "beautifulsoup4"
