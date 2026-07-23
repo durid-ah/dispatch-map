@@ -5,6 +5,13 @@ from sqlalchemy import BigInteger, CHAR, Column, DateTime, Double, text
 from sqlmodel import Field, Relationship, SQLModel
 
 
+STATUS_ORDER = {
+    "DISPATCHED": 1,
+    "ENROUTE": 2,
+    "ARRIVED": 3,
+}
+
+
 def compute_external_id(
     time_received: str,
     call_type: str,
@@ -130,3 +137,7 @@ class ActiveCall(SQLModel):
     @property
     def call_id(self) -> str:
         return self.external_id
+
+    @property
+    def status_order(self) -> int:
+        return STATUS_ORDER.get(self.status, 0)

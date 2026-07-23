@@ -85,6 +85,7 @@ def persist(calls: list[ActiveCall]) -> None:
                 )
                 new_events += 1
 
+                group.sort(key=lambda x: x[0].status_order)
                 for call, _ in group:
                     responder = db.create_responder(
                         event_id=event.id,

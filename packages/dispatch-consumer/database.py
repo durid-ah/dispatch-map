@@ -103,6 +103,7 @@ class DB:
             .order_by(ResponderStatusEvent.created_at.desc())
             .limit(1)
         ).first()
+        
         if status_event is None:
             return None
         return status_event.status
