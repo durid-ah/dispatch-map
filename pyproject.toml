@@ -14,4 +14,5 @@ members = [
     "packages/api",
     "packages/dispatch-consumer",
     "packages/db",
+    "packages/migrations",
 ]
