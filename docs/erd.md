@@ -80,6 +80,7 @@ erDiagram
         bigint id PK
         bigint responder_id FK
         text status
+        int status_order
         timestamptz created_at
     }
 ```
@@ -122,6 +123,7 @@ CREATE TABLE responder_status_events (
     id           bigserial PRIMARY KEY,
     responder_id bigint NOT NULL REFERENCES responders (id),
     status       text NOT NULL,
+    status_order integer NOT NULL,
     created_at   timestamptz NOT NULL DEFAULT now()
 );
 
@@ -159,7 +161,7 @@ flowchart LR
 | Unit | `unit` | `responders.unit` |
 | Call Type | `call_type` | `events.call_type` |
 | Location | `location` | `locations.raw_text` → `events.location_id` (also stored denormalized on `events.location`) |
-| Status | `status` | `responder_status_events.status` (initial row on insert) |
+| Status | `status` | `responder_status_events.status` + `status_order` (DISPATCHED=1, ENROUTE=2, ARRIVED=3; initial row on insert) |
 
 ## Identity and change tracking
 

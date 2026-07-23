@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlmodel import Session, create_engine, select
 
-from db.models import Event, Location, Responder, ResponderStatusEvent
+from db.models import STATUS_ORDER, Event, Location, Responder, ResponderStatusEvent
 
 
 class DB:
@@ -91,6 +91,7 @@ class DB:
         status_event = ResponderStatusEvent(
             responder_id=responder_id,
             status=status,
+            status_order=STATUS_ORDER.get(status.upper(), 0),
         )
         self.session.add(status_event)
         self.session.flush()
@@ -103,7 +104,7 @@ class DB:
             .order_by(ResponderStatusEvent.created_at.desc())
             .limit(1)
         ).first()
-        
+
         if status_event is None:
             return None
         return status_event.status

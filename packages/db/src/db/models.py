@@ -104,6 +104,7 @@ class ResponderStatusEvent(SQLModel, table=True):
     id: int | None = Field(default=None, sa_type=BigInteger, primary_key=True)
     responder_id: int = Field(foreign_key="responders.id", sa_type=BigInteger)
     status: str
+    status_order: int
     created_at: datetime = Field(
         sa_column=Column(
             DateTime(timezone=True),
