@@ -97,17 +97,15 @@ class DB:
         self.session.flush()
         return status_event
 
-    def latest_status(self, responder_id: int) -> str | None:
+    def latest_status(self, responder_id: int) -> ResponderStatusEvent | None:
         status_event = self.session.exec(
             select(ResponderStatusEvent)
             .where(ResponderStatusEvent.responder_id == responder_id)
             .order_by(ResponderStatusEvent.created_at.desc())
             .limit(1)
         ).first()
-
-        if status_event is None:
-            return None
-        return status_event.status
+        
+        return status_event
 
     def commit(self) -> None:
         self.session.commit()

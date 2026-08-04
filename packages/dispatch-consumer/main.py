@@ -72,6 +72,7 @@ def persist(calls: list[ActiveCall]) -> None:
         existing = group_existing_events(events)
 
         for external_id, group in grouped.items():
+            group.sort(key=lambda x: x[0].status_order)
             event = existing.get(external_id)
             if event is None:
                 call, parsed_time = group[0]
@@ -85,7 +86,6 @@ def persist(calls: list[ActiveCall]) -> None:
                 )
                 new_events += 1
 
-                group.sort(key=lambda x: x[0].status_order)
                 for call, _ in group:
                     responder = db.create_responder(
                         event_id=event.id,
@@ -101,7 +101,7 @@ def persist(calls: list[ActiveCall]) -> None:
             by_key = {(r.unit, r.agency): r for r in responders}
 
             for call, _ in group:
-                key = (call.unit, call.agency)
+                key = (call.unit, call.agency, call.dispatch_area)
                 responder = by_key.get(key)
                 if responder is None:
                     responder = db.create_responder(
@@ -116,7 +116,7 @@ def persist(calls: list[ActiveCall]) -> None:
                     continue
 
                 latest = db.latest_status(responder.id)
-                if latest != call.status:
+                if latest is None or latest.status_order >= call.status:
                     db.create_status_event(responder.id, call.status)
                     status_updates += 1
 
