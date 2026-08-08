@@ -2,17 +2,13 @@ from __future__ import annotations
 
 import logging
 import time
-from datetime import datetime
 
-from scraper import (
-    scrape_active_calls,
-    parse_time_received,
-)
+from scraper import scrape_active_calls
 from parser import parse_active_calls
-from models import STATUS_ORDER, ActiveCall
+from models import STATUS_ORDER, GroupedEvent
 from config import config
 from database import DB
-from util import group_active_calls, group_existing_events
+from util import group_existing_events
 
 POLL_INTERVAL_SECONDS = 45
 
@@ -44,28 +40,12 @@ def poll_once() -> None:
             return
 
         parsed_calls = parse_active_calls(active_calls)
-        
-        persist(active_calls)
-    # except Exception as exc:
-    #     logger.error("Failed to scrape active calls: %s", exc)
-    finally:
-        pass
+        persist(parsed_calls)
+    except Exception as exc:
+        logger.error("Failed to scrape active calls: %s", exc)
 
 
-def persist(calls: list[ActiveCall]) -> None:
-    valid_calls: list[tuple[ActiveCall, datetime]] = []
-    for call in calls:
-        parsed_time = parse_time_received(call.time_received)
-        if parsed_time is None:
-            continue
-        valid_calls.append((call, parsed_time))
-
-    if not valid_calls:
-        logger.info("No valid calls to persist")
-        return
-
-    grouped = group_active_calls(valid_calls)
-
+def persist(grouped: dict[str, GroupedEvent]) -> None:
     new_events = 0
     new_responders = 0
     new_status = 0
