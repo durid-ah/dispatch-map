@@ -4,14 +4,12 @@ import logging
 import time
 from datetime import datetime
 
-import httpx
-
-from richmond_active_calls import (
-    RichmondActiveCallsError,
-    fetch_active_calls,
+from scraper import (
+    scrape_active_calls,
     parse_time_received,
 )
-from db.models import STATUS_ORDER, ActiveCall
+from parser import parse_active_calls
+from models import STATUS_ORDER, ActiveCall
 from config import config
 from database import DB
 from util import group_active_calls, group_existing_events
@@ -40,13 +38,18 @@ def main() -> None:
 
 def poll_once() -> None:
     try:
-        calls, as_of = fetch_active_calls()
-    except (httpx.HTTPError, RichmondActiveCallsError) as exc:
-        logger.error("Failed to fetch active calls: %s", exc)
-        return
+        active_calls = scrape_active_calls()
+        if active_calls is None:
+            logger.error("Failed to scrape active calls")
+            return
 
-    logger.info("Fetched %s active call(s) as of %s", len(calls), as_of)
-    persist(calls)
+        parsed_calls = parse_active_calls(active_calls)
+        
+        persist(active_calls)
+    # except Exception as exc:
+    #     logger.error("Failed to scrape active calls: %s", exc)
+    finally:
+        pass
 
 
 def persist(calls: list[ActiveCall]) -> None:
