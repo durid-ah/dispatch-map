@@ -101,7 +101,7 @@ class DB:
         status_event = self.session.exec(
             select(ResponderStatusEvent)
             .where(ResponderStatusEvent.responder_id == responder_id)
-            .order_by(ResponderStatusEvent.created_at.desc())
+            .order_by(ResponderStatusEvent.status_order.desc())
             .limit(1)
         ).first()
         
