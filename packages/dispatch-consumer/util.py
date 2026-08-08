@@ -28,25 +28,28 @@ class GroupedResponder:
 class GroupedEvent:
     external_id: str
     time_received: str
+    parsed_time: datetime
     call_type: str
     location: str
     responders: list[GroupedResponder] = field(default_factory=list)
 
 
-def group_active_calls(calls: list[ActiveCall]) -> dict[str, GroupedEvent]:
+def group_active_calls(
+    calls: list[tuple[ActiveCall, datetime]],
+) -> dict[str, GroupedEvent]:
     by_event = group_by_external_id(calls)
 
     grouped: dict[str, GroupedEvent] = {}
     for external_id, event_calls in by_event.items():
-        first = event_calls[0][0]
+        first_call, parsed_time = event_calls[0]
         responders_map: dict[tuple[str, str, str], list[str]] = defaultdict(list)
         seen_statuses: dict[tuple[str, str, str], set[str]] = defaultdict(set)
 
-        for call in event_calls:
-            key = (call[0].unit, call[0].agency, call[0].dispatch_area)
-            if call[0].status not in seen_statuses[key]:
-                responders_map[key].append(call[0].status)
-                seen_statuses[key].add(call[0].status)
+        for call, _ in event_calls:
+            key = (call.unit, call.agency, call.dispatch_area)
+            if call.status not in seen_statuses[key]:
+                responders_map[key].append(call.status)
+                seen_statuses[key].add(call.status)
 
         responders = [
             GroupedResponder(
@@ -63,9 +66,10 @@ def group_active_calls(calls: list[ActiveCall]) -> dict[str, GroupedEvent]:
 
         grouped[external_id] = GroupedEvent(
             external_id=external_id,
-            time_received=first.time_received,
-            call_type=first.call_type,
-            location=first.location,
+            time_received=first_call.time_received,
+            parsed_time=parsed_time,
+            call_type=first_call.call_type,
+            location=first_call.location,
             responders=responders,
         )
 

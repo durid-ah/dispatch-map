@@ -11,10 +11,10 @@ from richmond_active_calls import (
     fetch_active_calls,
     parse_time_received,
 )
-from db.models import ActiveCall
+from db.models import STATUS_ORDER, ActiveCall
 from config import config
 from database import DB
-from util import group_by_external_id, group_existing_events
+from util import group_active_calls, group_existing_events
 
 POLL_INTERVAL_SECONDS = 45
 
@@ -61,64 +61,87 @@ def persist(calls: list[ActiveCall]) -> None:
         logger.info("No valid calls to persist")
         return
 
-    grouped = group_by_external_id(valid_calls)
+    grouped = group_active_calls(valid_calls)
 
     new_events = 0
     new_responders = 0
+    new_status = 0
     status_updates = 0
 
     with DB(config.db_url) as db:
         events = db.get_events(list(grouped.keys()))
         existing = group_existing_events(events)
 
-        for external_id, group in grouped.items():
-            group.sort(key=lambda x: x[0].status_order)
+        for external_id, grouped_event in grouped.items():
             event = existing.get(external_id)
             if event is None:
-                call, parsed_time = group[0]
-                location = db.get_or_create_location(call.location)
+                location = db.get_or_create_location(grouped_event.location)
                 event = db.create_event(
                     external_id=external_id,
-                    time_received=parsed_time,
-                    call_type=call.call_type,
-                    location=call.location,
+                    time_received=grouped_event.parsed_time,
+                    call_type=grouped_event.call_type,
+                    location=grouped_event.location,
                     location_id=location.id,
                 )
                 new_events += 1
 
-                for call, _ in group:
+                for responder_group in grouped_event.responders:
                     responder = db.create_responder(
                         event_id=event.id,
-                        unit=call.unit,
-                        dispatch_area=call.dispatch_area,
-                        agency=call.agency,
+                        unit=responder_group.unit,
+                        dispatch_area=responder_group.dispatch_area,
+                        agency=responder_group.agency,
                     )
-                    db.create_status_event(responder.id, call.status)
                     new_responders += 1
+                    for status in responder_group.statuses:
+                        db.create_status_event(responder.id, status)
+                        new_status += 1
                 continue
 
             responders = db.get_responders_for_event(event.id)
-            by_key = {(r.unit, r.agency): r for r in responders}
+            by_key = {
+                (r.unit, r.agency, r.dispatch_area): r for r in responders
+            }
 
-            for call, _ in group:
-                key = (call.unit, call.agency, call.dispatch_area)
+            for responder_group in grouped_event.responders:
+                key = (
+                    responder_group.unit,
+                    responder_group.agency,
+                    responder_group.dispatch_area,
+                )
                 responder = by_key.get(key)
                 if responder is None:
                     responder = db.create_responder(
                         event_id=event.id,
-                        unit=call.unit,
-                        dispatch_area=call.dispatch_area,
-                        agency=call.agency,
+                        unit=responder_group.unit,
+                        dispatch_area=responder_group.dispatch_area,
+                        agency=responder_group.agency,
                     )
-                    db.create_status_event(responder.id, call.status)
                     by_key[key] = responder
                     new_responders += 1
+                    for status in responder_group.statuses:
+                        db.create_status_event(responder.id, status)
+                        new_status += 1
                     continue
 
-                latest = db.latest_status(responder.id)
-                if latest is None or latest.status_order >= call.status:
-                    db.create_status_event(responder.id, call.status)
-                    status_updates += 1
+                for status in responder_group.statuses:
+                    status_order = STATUS_ORDER.get(status.upper(), 0)
+                    latest = db.latest_status(responder.id)
+                    if latest is None or latest.status_order < status_order:
+                        logger.info(
+                            "Create: call: %s; responder: %s; status: %s",
+                            grouped_event.call_type,
+                            responder_group.unit + " " + responder_group.agency,
+                            status,
+                        )
+                        db.create_status_event(responder.id, status)
+                        status_updates += 1
+                    else:
+                        logger.info(
+                            "Responder %s has latest status %s",
+                            responder.id,
+                            latest.status,
+                        )
 
         db.commit()
 
