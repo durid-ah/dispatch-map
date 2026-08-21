@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from db.models import STATUS_ORDER, ActiveCall  # pyright: ignore[reportUnusedImport]
+from db.models import STATUS_ORDER, ActiveCall, Event  # pyright: ignore[reportUnusedImport]
 
 @dataclass
 class GroupedResponder:
