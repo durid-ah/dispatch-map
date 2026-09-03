@@ -1,6 +1,10 @@
-from models import GroupedEvent, Event, GroupedResponder, Responder
+import logging
+
+from models import STATUS_ORDER, GroupedEvent, Event, GroupedResponder, Responder
 from database import DB
 from config import config
+
+logger = logging.getLogger(__name__)
 
 def process_grouped_events(grouped: dict[str, GroupedEvent]) -> None:
     with DB(config.db_url) as db:
@@ -14,7 +18,9 @@ def process_grouped_events(grouped: dict[str, GroupedEvent]) -> None:
                 for responder_group in grouped_event.responders:
                     handle_new_responder(db, event, responder_group)
             else:
-                pass
+                handle_existing_event(db, event, grouped_event)
+        
+        db.commit()
 
 
 def group_existing_events(events: list[Event]) -> dict[str, Event]:
@@ -34,8 +40,43 @@ def handle_new_event(db: DB, grouped_event: GroupedEvent) -> Event:
         location_id=location.id,
     )
 
-def handle_existing_event(db: DB, event: GroupedEvent, grouped_event: GroupedEvent) -> None:
-    pass
+def handle_existing_event(db: DB, event: Event, grouped_event: GroupedEvent) -> None:
+    by_key = group_responders(db.get_responders_for_event(event.id))
+    for responder_group in grouped_event.responders:
+        key = (
+            responder_group.unit,
+            responder_group.agency,
+            responder_group.dispatch_area,
+        )
+        responder = by_key.get(key)
+        if responder is None:
+            handle_new_responder(db, event, responder_group)
+        else:
+            update_existing_responders(db, grouped_event, responder, responder_group)
+
+def update_existing_responders(
+    db: DB,
+    grouped_event: GroupedEvent,
+    responder: Responder,
+    responder_group: GroupedResponder,
+):
+    for status in responder_group.statuses:
+        status_order = STATUS_ORDER.get(status.upper(), 0)
+        latest = db.latest_status(responder.id)
+        if latest is None or latest.status_order < status_order:
+            logger.info(
+                "Create: call: %s; responder: %s; status: %s",
+                grouped_event.call_type,
+                responder_group.unit + " " + responder_group.agency,
+                status,
+            )
+            db.create_status_event(responder.id, status)
+        else:
+            logger.info(
+                "Responder %s has latest status %s",
+                responder.id,
+                latest.status,
+            )
 
 def handle_new_responder(db: DB, event: Event, responder_group: GroupedResponder) -> None:
     responder = db.create_responder(

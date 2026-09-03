@@ -5,10 +5,8 @@ import time
 
 from scraper import scrape_active_calls
 from parser import parse_active_calls
-from models import STATUS_ORDER, GroupedEvent
 from config import config
-from database import DB
-from util import group_existing_events
+from processor import process_grouped_events
 
 POLL_INTERVAL_SECONDS = 45
 
@@ -40,100 +38,9 @@ def poll_once() -> None:
             return
 
         parsed_calls = parse_active_calls(active_calls)
-        persist(parsed_calls)
+        process_grouped_events(parsed_calls)
     except Exception as exc:
         logger.error("Failed to scrape active calls: %s", exc)
-
-
-def persist(grouped: dict[str, GroupedEvent]) -> None:
-    new_events = 0
-    new_responders = 0
-    new_status = 0
-    status_updates = 0
-
-    with DB(config.db_url) as db:
-        events = db.get_events(list(grouped.keys()))
-        existing = group_existing_events(events)
-
-        for external_id, grouped_event in grouped.items():
-            event = existing.get(external_id)
-            if event is None:
-                location = db.get_or_create_location(grouped_event.location)
-                event = db.create_event(
-                    external_id=external_id,
-                    time_received=grouped_event.parsed_time,
-                    call_type=grouped_event.call_type,
-                    location=grouped_event.location,
-                    location_id=location.id,
-                )
-                new_events += 1
-
-                for responder_group in grouped_event.responders:
-                    responder = db.create_responder(
-                        event_id=event.id,
-                        unit=responder_group.unit,
-                        dispatch_area=responder_group.dispatch_area,
-                        agency=responder_group.agency,
-                    )
-                    new_responders += 1
-                    for status in responder_group.statuses:
-                        db.create_status_event(responder.id, status)
-                        new_status += 1
-                continue
-
-            responders = db.get_responders_for_event(event.id)
-            by_key = {
-                (r.unit, r.agency, r.dispatch_area): r for r in responders
-            }
-
-            for responder_group in grouped_event.responders:
-                key = (
-                    responder_group.unit,
-                    responder_group.agency,
-                    responder_group.dispatch_area,
-                )
-                responder = by_key.get(key)
-                if responder is None:
-                    responder = db.create_responder(
-                        event_id=event.id,
-                        unit=responder_group.unit,
-                        dispatch_area=responder_group.dispatch_area,
-                        agency=responder_group.agency,
-                    )
-                    by_key[key] = responder
-                    new_responders += 1
-                    for status in responder_group.statuses:
-                        db.create_status_event(responder.id, status)
-                        new_status += 1
-                    continue
-
-                for status in responder_group.statuses:
-                    status_order = STATUS_ORDER.get(status.upper(), 0)
-                    latest = db.latest_status(responder.id)
-                    if latest is None or latest.status_order < status_order:
-                        logger.info(
-                            "Create: call: %s; responder: %s; status: %s",
-                            grouped_event.call_type,
-                            responder_group.unit + " " + responder_group.agency,
-                            status,
-                        )
-                        db.create_status_event(responder.id, status)
-                        status_updates += 1
-                    else:
-                        logger.info(
-                            "Responder %s has latest status %s",
-                            responder.id,
-                            latest.status,
-                        )
-
-        db.commit()
-
-    logger.info(
-        "Persist complete: %s new event(s), %s new responder(s), %s status update(s)",
-        new_events,
-        new_responders,
-        status_updates,
-    )
 
 
 if __name__ == "__main__":
