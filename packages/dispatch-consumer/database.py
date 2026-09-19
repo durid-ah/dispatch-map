@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlmodel import Session, create_engine, select
 
@@ -34,6 +34,19 @@ class DB:
             return location
 
         location = Location(raw_text=raw_text)
+        self.session.add(location)
+        self.session.flush()
+        return location
+
+    def update_location_coordinates(
+        self,
+        location: Location,
+        latitude: float,
+        longitude: float,
+    ) -> Location:
+        location.latitude = latitude
+        location.longitude = longitude
+        location.updated_at = datetime.now(timezone.utc)
         self.session.add(location)
         self.session.flush()
         return location
