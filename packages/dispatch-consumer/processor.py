@@ -2,7 +2,9 @@ import logging
 
 from models import STATUS_ORDER, GroupedEvent, Event, GroupedResponder, Responder
 from database import DB
+from db.models import Location
 from config import config
+from geocoder import geocode_location
 
 logger = logging.getLogger(__name__)
 
@@ -11,10 +13,19 @@ def process_grouped_events(grouped: dict[str, GroupedEvent]) -> None:
         events = db.get_events(list(grouped.keys()))
         existing = group_existing_events(events)
 
+        geocoded: dict[str, Location] = {}
+        for grouped_event in grouped.values():
+            if grouped_event.location not in geocoded:
+                geocoded[grouped_event.location] = ensure_geocoded_location(
+                    db, grouped_event.location
+                )
+
         for external_id, grouped_event in grouped.items():
             event = existing.get(external_id)
             if event is None:
-                event = handle_new_event(db, grouped_event)
+                event = handle_new_event(
+                    db, grouped_event, geocoded[grouped_event.location]
+                )
                 for responder_group in grouped_event.responders:
                     handle_new_responder(db, event, responder_group)
             else:
@@ -30,8 +41,19 @@ def group_existing_events(events: list[Event]) -> dict[str, Event]:
 
     return grouped
 
-def handle_new_event(db: DB, grouped_event: GroupedEvent) -> Event:
-    location = db.get_or_create_location(grouped_event.location)
+def ensure_geocoded_location(db: DB, raw_text: str) -> Location:
+    location = db.get_or_create_location(raw_text)
+    if location.latitude is not None and location.longitude is not None:
+        return location
+
+    coords = geocode_location(raw_text)
+    if coords is None:
+        return location
+
+    return db.update_location_coordinates(location, coords[0], coords[1])
+
+
+def handle_new_event(db: DB, grouped_event: GroupedEvent, location: Location) -> Event:
     return db.create_event(
         external_id=grouped_event.external_id,
         time_received=grouped_event.parsed_time,
