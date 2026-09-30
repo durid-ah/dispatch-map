@@ -44,3 +44,5 @@ coverage.xml
 test_data/
 
 .env
+node_modules/
+packages/api/static/app/
