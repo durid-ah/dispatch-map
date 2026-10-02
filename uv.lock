@@ -67,12 +67,16 @@ source = { virtual = "packages/api" }
 dependencies = [
     { name = "db" },
     { name = "fastapi", extra = ["standard"] },
+    { name = "psycopg2-binary" },
+    { name = "python-dotenv" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "db", editable = "packages/db" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.139.0" },
+    { name = "psycopg2-binary", specifier = ">=2.9.12" },
+    { name = "python-dotenv", specifier = ">=1.2.2" },
 ]
 
 [[package]]

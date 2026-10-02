@@ -1,0 +1,492 @@
+source /Users/duridahmad/source_code/dispatch-map/.venv/bin/activate
+➜  dispatch-map source /Users/duridahmad/source_code/dispatch-map/.venv/bin/activate
+(dispatch-map) ➜  dispatch-map git:(main) ✗ cd packages/dispatch-consumer                                       
+(dispatch-map) ➜  dispatch-consumer git:(main) ✗ uv run python main.py                                               
+2026-09-19 20:34:22,209 INFO Starting Richmond active calls consumer
+2026-09-19 20:34:22,209 INFO Source URL: https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls
+2026-09-19 20:34:22,209 INFO Poll interval: 45s
+2026-09-19 20:34:22,311 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 20:34:22,321 INFO Fetched 30 active call(s) as of 9/19/2026 8:34:22 PM
+2026-09-19 20:34:22,765 INFO HTTP Request: GET http://localhost:8091/search?q=7100+JAHNKE+Road%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:22,766 INFO Geocoded '7100-BLK JAHNKE RD' -> 37.5169336, -77.5259443
+2026-09-19 20:34:22,862 INFO HTTP Request: GET http://localhost:8091/search?q=2300+FAIRFIELD+Avenue%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:22,863 INFO Geocoded '2300-BLK FAIRFIELD AVE' -> 37.5483078, -77.4105356
+2026-09-19 20:34:22,942 INFO HTTP Request: GET http://localhost:8091/search?q=3500+CHAMBERLAYNE+Avenue%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:22,942 INFO Geocoded '3500-BLK CHAMBERLAYNE AVE' -> 37.5799328, -77.4469305
+2026-09-19 20:34:23,030 INFO HTTP Request: GET http://localhost:8091/search?q=800+RICHMOND+Highway%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,030 INFO Geocoded '800-BLK RICHMOND HWY' -> 37.508793, -77.4480183
+2026-09-19 20:34:23,118 INFO HTTP Request: GET http://localhost:8091/search?q=6500+HULL+STREET+Road%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,118 INFO Geocoded '6500-BLK HULL STREET RD' -> 37.4804874, -77.5121816
+2026-09-19 20:34:23,198 INFO HTTP Request: GET http://localhost:8091/search?q=4600+North+SOUTHSIDE+PLZ%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,199 WARNING No Nominatim match for '4600-BLK N SOUTHSIDE PLZ' (query '4600 North SOUTHSIDE PLZ, Richmond, VA')
+2026-09-19 20:34:23,262 INFO HTTP Request: GET http://localhost:8091/search?q=1800+West+GRACE+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,262 INFO Geocoded '1800-BLK W GRACE ST' -> 37.5551258, -77.4593222
+2026-09-19 20:34:23,289 INFO HTTP Request: GET http://localhost:8091/search?q=3600+RICHMOND+Highway%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,289 INFO Geocoded '3600-BLK RICHMOND HWY' -> 37.4752744, -77.4444157
+2026-09-19 20:34:23,333 INFO HTTP Request: GET http://localhost:8091/search?q=3000+STONY+POINT+Road%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,333 INFO Geocoded '3000-BLK STONY POINT RD' -> 37.5387389, -77.5642407
+2026-09-19 20:34:23,397 INFO HTTP Request: GET http://localhost:8091/search?q=3000+West+BROAD+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,397 INFO Geocoded '3000-BLK W BROAD ST' -> 37.564782, -77.4727504
+2026-09-19 20:34:23,437 INFO HTTP Request: GET http://localhost:8091/search?q=700+STOCKTON+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,437 INFO Geocoded '700-BLK STOCKTON ST' -> 37.5214521, -77.4386556
+2026-09-19 20:34:23,535 INFO HTTP Request: GET http://localhost:8091/search?q=7000+FOREST+HILL+Avenue%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,535 INFO Geocoded '7000-BLK FOREST HILL AVE' -> 37.5222851, -77.4907862
+2026-09-19 20:34:23,604 INFO HTTP Request: GET http://localhost:8091/search?q=3100+FLOYD+Avenue%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,604 INFO Geocoded '3100-BLK FLOYD AVE' -> 37.5554365, -77.4787666
+2026-09-19 20:34:23,638 INFO HTTP Request: GET http://localhost:8091/search?q=TEXAS+Avenue+and+KANSAS+Avenue%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,638 WARNING No Nominatim match for 'TEXAS AVE/KANSAS AVE RICH' (query 'TEXAS Avenue and KANSAS Avenue, Richmond, VA')
+2026-09-19 20:34:23,668 INFO HTTP Request: GET http://localhost:8091/search?q=2100+ACCOMMODATION+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,668 INFO Geocoded '2100-BLK ACCOMMODATION ST' -> 37.5487995, -77.4173708
+2026-09-19 20:34:23,743 INFO HTTP Request: GET http://localhost:8091/search?q=3200+East+MAIN+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,743 INFO Geocoded '3200-BLK E MAIN ST' -> 37.5374749, -77.4350645
+2026-09-19 20:34:23,806 INFO HTTP Request: GET http://localhost:8091/search?q=1300+COALTER+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,806 INFO Geocoded '1300-BLK COALTER ST' -> 37.5439924, -77.4211773
+2026-09-19 20:34:23,835 INFO HTTP Request: GET http://localhost:8091/search?q=500+East+MARSHALL+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,835 INFO Geocoded '500-BLK E MARSHALL ST' -> 37.5432612, -77.4357318
+2026-09-19 20:34:23,865 INFO HTTP Request: GET http://localhost:8091/search?q=1500+ARMFIELD+Road%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,865 INFO Geocoded '1500-BLK ARMFIELD RD' -> 37.4831277, -77.5163942
+2026-09-19 20:34:23,891 INFO HTTP Request: GET http://localhost:8091/search?q=3100+West+BROAD+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,891 INFO Geocoded '3100-BLK W BROAD ST' -> 37.5656688, -77.4738416
+2026-09-19 20:34:23,933 INFO HTTP Request: GET http://localhost:8091/search?q=1600+BROAD+ROCK+Boulevard%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,933 INFO Geocoded '1600-BLK BROAD ROCK BLVD' -> 37.4934886, -77.4709086
+2026-09-19 20:34:23,964 INFO HTTP Request: GET http://localhost:8091/search?q=3700+DELMONT+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:23,965 INFO Geocoded '3700-BLK DELMONT ST' -> 37.5816138, -77.4283823
+2026-09-19 20:34:24,021 INFO HTTP Request: GET http://localhost:8091/search?q=3100+LAKE+VILLAGE+Drive%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:24,021 INFO Geocoded '3100-BLK LAKE VILLAGE DR' -> 37.5388499, -77.5689667
+2026-09-19 20:34:24,049 INFO HTTP Request: GET http://localhost:8091/search?q=800+EDGEHILL+Road%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:24,050 INFO Geocoded '800-BLK EDGEHILL RD' -> 37.5677134, -77.4420224
+2026-09-19 20:34:24,075 INFO HTTP Request: GET http://localhost:8091/search?q=3000+CHAMBERLAYNE+Avenue%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:34:24,075 INFO Geocoded '3000-BLK CHAMBERLAYNE AVE' -> 37.5725597, -77.4456656
+2026-09-19 20:35:09,180 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 20:35:09,193 INFO Fetched 32 active call(s) as of 9/19/2026 8:35:09 PM
+2026-09-19 20:35:09,272 INFO HTTP Request: GET http://localhost:8091/search?q=3900+WYTHE+Avenue%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:35:09,272 INFO Geocoded '3900-BLK WYTHE AVE' -> 37.5672138, -77.4842971
+2026-09-19 20:35:09,305 INFO HTTP Request: GET http://localhost:8091/search?q=ERICH+Road+and+LARRYMORE+Road%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:35:09,305 WARNING No Nominatim match for 'ERICH RD/LARRYMORE RD RICH' (query 'ERICH Road and LARRYMORE Road, Richmond, VA')
+2026-09-19 20:35:09,307 INFO Responder 4403 has latest status Arrived
+2026-09-19 20:35:09,308 INFO Responder 4404 has latest status Arrived
+2026-09-19 20:35:09,309 INFO Responder 4405 has latest status Dispatched
+2026-09-19 20:35:09,309 INFO Responder 4406 has latest status Arrived
+2026-09-19 20:35:09,310 INFO Responder 4407 has latest status Enroute
+2026-09-19 20:35:09,310 INFO Responder 4408 has latest status Arrived
+2026-09-19 20:35:09,311 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:35:09,312 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:35:09,313 INFO Responder 4410 has latest status Enroute
+2026-09-19 20:35:09,315 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:35:09,316 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:35:09,317 INFO Responder 4412 has latest status Enroute
+2026-09-19 20:35:09,318 INFO Responder 4413 has latest status Arrived
+2026-09-19 20:35:09,319 INFO Responder 4414 has latest status Enroute
+2026-09-19 20:35:09,320 INFO Responder 4415 has latest status Enroute
+2026-09-19 20:35:09,321 INFO Responder 4417 has latest status Arrived
+2026-09-19 20:35:09,322 INFO Responder 4418 has latest status Arrived
+2026-09-19 20:35:09,323 INFO Responder 4419 has latest status Enroute
+2026-09-19 20:35:09,323 INFO Responder 4420 has latest status Arrived
+2026-09-19 20:35:09,324 INFO Responder 4421 has latest status Enroute
+2026-09-19 20:35:09,329 INFO Responder 4422 has latest status Arrived
+2026-09-19 20:35:09,330 INFO Responder 4423 has latest status Arrived
+2026-09-19 20:35:09,331 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:35:09,331 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:35:09,332 INFO Responder 4416 has latest status Enroute
+2026-09-19 20:35:09,334 INFO Responder 4425 has latest status Enroute
+2026-09-19 20:35:09,335 INFO Responder 4426 has latest status Enroute
+2026-09-19 20:35:09,337 INFO Responder 4427 has latest status Arrived
+2026-09-19 20:35:09,338 INFO Responder 4428 has latest status Arrived
+2026-09-19 20:35:09,339 INFO Responder 4429 has latest status Enroute
+2026-09-19 20:35:54,399 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 20:35:54,410 INFO Fetched 32 active call(s) as of 9/19/2026 8:35:54 PM
+2026-09-19 20:35:54,443 INFO Responder 4403 has latest status Arrived
+2026-09-19 20:35:54,444 INFO Responder 4404 has latest status Arrived
+2026-09-19 20:35:54,445 INFO Responder 4405 has latest status Dispatched
+2026-09-19 20:35:54,446 INFO Responder 4406 has latest status Arrived
+2026-09-19 20:35:54,447 INFO Responder 4407 has latest status Enroute
+2026-09-19 20:35:54,448 INFO Responder 4408 has latest status Arrived
+2026-09-19 20:35:54,449 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:35:54,450 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:35:54,451 INFO Responder 4410 has latest status Enroute
+2026-09-19 20:35:54,452 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:35:54,452 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:35:54,453 INFO Responder 4412 has latest status Enroute
+2026-09-19 20:35:54,454 INFO Responder 4413 has latest status Arrived
+2026-09-19 20:35:54,455 INFO Responder 4414 has latest status Enroute
+2026-09-19 20:35:54,456 INFO Responder 4415 has latest status Enroute
+2026-09-19 20:35:54,457 INFO Responder 4417 has latest status Arrived
+2026-09-19 20:35:54,458 INFO Responder 4418 has latest status Arrived
+2026-09-19 20:35:54,459 INFO Responder 4420 has latest status Arrived
+2026-09-19 20:35:54,460 INFO Responder 4421 has latest status Enroute
+2026-09-19 20:35:54,461 INFO Responder 4430 has latest status Enroute
+2026-09-19 20:35:54,462 INFO Create: call: TRAFFIC STOP , OFFICER-INITIATED; responder: 111B4 RPD; status: Arrived
+2026-09-19 20:35:54,465 INFO Responder 4422 has latest status Arrived
+2026-09-19 20:35:54,465 INFO Responder 4423 has latest status Arrived
+2026-09-19 20:35:54,466 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:35:54,466 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:35:54,468 INFO Responder 4416 has latest status Enroute
+2026-09-19 20:35:54,469 INFO Responder 4425 has latest status Enroute
+2026-09-19 20:35:54,470 INFO Responder 4426 has latest status Enroute
+2026-09-19 20:35:54,471 INFO Responder 4427 has latest status Arrived
+2026-09-19 20:35:54,471 INFO Responder 4428 has latest status Arrived
+2026-09-19 20:35:54,472 INFO Responder 4429 has latest status Enroute
+2026-09-19 20:35:54,473 INFO Responder 4431 has latest status Enroute
+2026-09-19 20:36:39,547 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 20:36:39,557 INFO Fetched 33 active call(s) as of 9/19/2026 8:36:39 PM
+2026-09-19 20:36:39,682 INFO HTTP Request: GET http://localhost:8091/search?q=1200+HULL+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:36:39,683 INFO Geocoded '1200-BLK HULL ST' -> 37.5171976, -77.449973
+2026-09-19 20:36:39,685 INFO Responder 4403 has latest status Arrived
+2026-09-19 20:36:39,686 INFO Responder 4404 has latest status Arrived
+2026-09-19 20:36:39,687 INFO Responder 4405 has latest status Dispatched
+2026-09-19 20:36:39,687 INFO Responder 4406 has latest status Arrived
+2026-09-19 20:36:39,688 INFO Responder 4407 has latest status Enroute
+2026-09-19 20:36:39,689 INFO Responder 4408 has latest status Arrived
+2026-09-19 20:36:39,689 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:36:39,689 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:36:39,690 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:36:39,690 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:36:39,691 INFO Responder 4412 has latest status Enroute
+2026-09-19 20:36:39,691 INFO Responder 4413 has latest status Arrived
+2026-09-19 20:36:39,692 INFO Responder 4414 has latest status Enroute
+2026-09-19 20:36:39,692 INFO Responder 4415 has latest status Enroute
+2026-09-19 20:36:39,693 INFO Responder 4417 has latest status Arrived
+2026-09-19 20:36:39,693 INFO Responder 4418 has latest status Arrived
+2026-09-19 20:36:39,694 INFO Responder 4420 has latest status Arrived
+2026-09-19 20:36:39,695 INFO Responder 4421 has latest status Enroute
+2026-09-19 20:36:39,695 INFO Responder 4430 has latest status Enroute
+2026-09-19 20:36:39,696 INFO Responder 4419 has latest status Arrived
+2026-09-19 20:36:39,697 INFO Create: call: UNNECESSARY NOISE , INVESTIGATE; responder: 311A6 RPD; status: Arrived
+2026-09-19 20:36:39,698 INFO Responder 4422 has latest status Arrived
+2026-09-19 20:36:39,699 INFO Responder 4423 has latest status Arrived
+2026-09-19 20:36:39,700 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:36:39,700 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:36:39,701 INFO Responder 4416 has latest status Enroute
+2026-09-19 20:36:39,702 INFO Responder 4425 has latest status Enroute
+2026-09-19 20:36:39,702 INFO Responder 4426 has latest status Enroute
+2026-09-19 20:36:39,703 INFO Responder 4427 has latest status Arrived
+2026-09-19 20:36:39,703 INFO Responder 4429 has latest status Enroute
+2026-09-19 20:36:39,704 INFO Responder 4431 has latest status Enroute
+2026-09-19 20:37:24,769 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 20:37:24,782 INFO Fetched 33 active call(s) as of 9/19/2026 8:37:24 PM
+2026-09-19 20:37:24,803 INFO Responder 4403 has latest status Arrived
+2026-09-19 20:37:24,804 INFO Responder 4404 has latest status Arrived
+2026-09-19 20:37:24,805 INFO Responder 4405 has latest status Dispatched
+2026-09-19 20:37:24,805 INFO Responder 4406 has latest status Arrived
+2026-09-19 20:37:24,806 INFO Responder 4407 has latest status Enroute
+2026-09-19 20:37:24,807 INFO Responder 4408 has latest status Arrived
+2026-09-19 20:37:24,807 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:37:24,808 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:37:24,808 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:37:24,809 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:37:24,809 INFO Responder 4412 has latest status Enroute
+2026-09-19 20:37:24,810 INFO Responder 4413 has latest status Arrived
+2026-09-19 20:37:24,810 INFO Responder 4415 has latest status Enroute
+2026-09-19 20:37:24,811 INFO Responder 4417 has latest status Arrived
+2026-09-19 20:37:24,811 INFO Responder 4418 has latest status Arrived
+2026-09-19 20:37:24,812 INFO Responder 4420 has latest status Arrived
+2026-09-19 20:37:24,812 INFO Responder 4421 has latest status Enroute
+2026-09-19 20:37:24,813 INFO Responder 4430 has latest status Enroute
+2026-09-19 20:37:24,814 INFO Responder 4419 has latest status Arrived
+2026-09-19 20:37:24,815 INFO Responder 4410 has latest status Arrived
+2026-09-19 20:37:24,817 INFO Responder 4422 has latest status Arrived
+2026-09-19 20:37:24,818 INFO Responder 4423 has latest status Arrived
+2026-09-19 20:37:24,819 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:37:24,819 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:37:24,820 INFO Responder 4416 has latest status Enroute
+2026-09-19 20:37:24,820 INFO Responder 4425 has latest status Enroute
+2026-09-19 20:37:24,821 INFO Responder 4426 has latest status Enroute
+2026-09-19 20:37:24,821 INFO Responder 4427 has latest status Arrived
+2026-09-19 20:37:24,822 INFO Responder 4429 has latest status Enroute
+2026-09-19 20:37:24,823 INFO Responder 4431 has latest status Enroute
+2026-09-19 20:37:24,824 INFO Responder 4433 has latest status Enroute
+2026-09-19 20:37:24,824 INFO Create: call: # EMS - 1ST RESP CALL (FIRE RESP ONLY) , UNKNOWN PROBLEM/PERSON DOWN; responder: E13 RFD; status: Arrived
+2026-09-19 20:38:09,895 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 20:38:09,910 INFO Fetched 32 active call(s) as of 9/19/2026 8:38:09 PM
+2026-09-19 20:38:09,935 INFO Responder 4403 has latest status Arrived
+2026-09-19 20:38:09,936 INFO Responder 4404 has latest status Arrived
+2026-09-19 20:38:09,937 INFO Responder 4405 has latest status Dispatched
+2026-09-19 20:38:09,938 INFO Responder 4406 has latest status Arrived
+2026-09-19 20:38:09,938 INFO Responder 4407 has latest status Enroute
+2026-09-19 20:38:09,939 INFO Responder 4408 has latest status Arrived
+2026-09-19 20:38:09,940 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:38:09,940 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:38:09,941 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:38:09,941 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:38:09,942 INFO Responder 4412 has latest status Enroute
+2026-09-19 20:38:09,943 INFO Responder 4413 has latest status Arrived
+2026-09-19 20:38:09,944 INFO Responder 4415 has latest status Enroute
+2026-09-19 20:38:09,945 INFO Responder 4417 has latest status Arrived
+2026-09-19 20:38:09,945 INFO Responder 4418 has latest status Arrived
+2026-09-19 20:38:09,946 INFO Responder 4420 has latest status Arrived
+2026-09-19 20:38:09,946 INFO Responder 4421 has latest status Enroute
+2026-09-19 20:38:09,947 INFO Responder 4430 has latest status Enroute
+2026-09-19 20:38:09,948 INFO Responder 4419 has latest status Arrived
+2026-09-19 20:38:09,949 INFO Responder 4410 has latest status Arrived
+2026-09-19 20:38:09,949 INFO Responder 4434 has latest status Enroute
+2026-09-19 20:38:09,950 INFO Responder 4422 has latest status Arrived
+2026-09-19 20:38:09,951 INFO Responder 4423 has latest status Arrived
+2026-09-19 20:38:09,951 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:38:09,952 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:38:09,953 INFO Responder 4416 has latest status Enroute
+2026-09-19 20:38:09,953 INFO Responder 4425 has latest status Enroute
+2026-09-19 20:38:09,954 INFO Responder 4426 has latest status Enroute
+2026-09-19 20:38:09,955 INFO Responder 4427 has latest status Arrived
+2026-09-19 20:38:09,955 INFO Responder 4431 has latest status Enroute
+2026-09-19 20:38:09,956 INFO Responder 4433 has latest status Enroute
+2026-09-19 20:38:09,957 INFO Create: call: MENTAL SUBJECT , INVESTIGATE; responder: 412B8 RPD; status: Arrived
+2026-09-19 20:38:55,034 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 20:38:55,047 INFO Fetched 32 active call(s) as of 9/19/2026 8:38:55 PM
+2026-09-19 20:38:55,115 INFO HTTP Request: GET http://localhost:8091/search?q=1200+West+MAIN+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:38:55,115 INFO Geocoded '1200-BLK W MAIN ST' -> 37.5462634, -77.4568
+2026-09-19 20:38:55,159 INFO HTTP Request: GET http://localhost:8091/search?q=100+West+FRANKLIN+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:38:55,159 INFO Geocoded '100-BLK W FRANKLIN ST' -> 37.544751, -77.4444328
+2026-09-19 20:38:55,163 INFO Responder 4403 has latest status Arrived
+2026-09-19 20:38:55,163 INFO Responder 4404 has latest status Arrived
+2026-09-19 20:38:55,164 INFO Responder 4405 has latest status Dispatched
+2026-09-19 20:38:55,165 INFO Responder 4406 has latest status Arrived
+2026-09-19 20:38:55,166 INFO Responder 4407 has latest status Enroute
+2026-09-19 20:38:55,166 INFO Responder 4408 has latest status Arrived
+2026-09-19 20:38:55,167 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:38:55,167 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:38:55,168 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:38:55,168 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:38:55,169 INFO Responder 4412 has latest status Enroute
+2026-09-19 20:38:55,170 INFO Responder 4413 has latest status Arrived
+2026-09-19 20:38:55,171 INFO Responder 4415 has latest status Enroute
+2026-09-19 20:38:55,172 INFO Responder 4420 has latest status Arrived
+2026-09-19 20:38:55,172 INFO Responder 4421 has latest status Enroute
+2026-09-19 20:38:55,173 INFO Responder 4430 has latest status Enroute
+2026-09-19 20:38:55,174 INFO Responder 4419 has latest status Arrived
+2026-09-19 20:38:55,175 INFO Responder 4410 has latest status Arrived
+2026-09-19 20:38:55,179 INFO Responder 4422 has latest status Arrived
+2026-09-19 20:38:55,180 INFO Responder 4423 has latest status Arrived
+2026-09-19 20:38:55,181 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:38:55,181 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:38:55,182 INFO Responder 4416 has latest status Enroute
+2026-09-19 20:38:55,183 INFO Responder 4425 has latest status Enroute
+2026-09-19 20:38:55,184 INFO Responder 4426 has latest status Enroute
+2026-09-19 20:38:55,185 INFO Responder 4427 has latest status Arrived
+2026-09-19 20:38:55,186 INFO Responder 4431 has latest status Enroute
+2026-09-19 20:38:55,186 INFO Responder 4433 has latest status Enroute
+2026-09-19 20:38:55,189 INFO Responder 4429 has latest status Arrived
+2026-09-19 20:39:40,268 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 20:39:40,282 INFO Fetched 34 active call(s) as of 9/19/2026 8:39:40 PM
+2026-09-19 20:39:40,362 INFO HTTP Request: GET http://localhost:8091/search?q=1500+North+31st+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:39:40,362 INFO Geocoded '1500-BLK N 31ST ST' -> 37.5388543, -77.4035889
+2026-09-19 20:39:40,405 INFO HTTP Request: GET http://localhost:8091/search?q=100+TEMPLE+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:39:40,405 INFO Geocoded '100-BLK TEMPLE ST' -> 37.5436548, -77.4637308
+2026-09-19 20:39:40,408 INFO Responder 4403 has latest status Arrived
+2026-09-19 20:39:40,409 INFO Responder 4404 has latest status Arrived
+2026-09-19 20:39:40,412 INFO Responder 4405 has latest status Dispatched
+2026-09-19 20:39:40,412 INFO Responder 4406 has latest status Arrived
+2026-09-19 20:39:40,413 INFO Responder 4407 has latest status Enroute
+2026-09-19 20:39:40,414 INFO Responder 4408 has latest status Arrived
+2026-09-19 20:39:40,414 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:39:40,415 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:39:40,415 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:39:40,416 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:39:40,417 INFO Responder 4412 has latest status Enroute
+2026-09-19 20:39:40,417 INFO Responder 4413 has latest status Arrived
+2026-09-19 20:39:40,418 INFO Responder 4415 has latest status Enroute
+2026-09-19 20:39:40,419 INFO Responder 4420 has latest status Arrived
+2026-09-19 20:39:40,420 INFO Responder 4421 has latest status Enroute
+2026-09-19 20:39:40,421 INFO Responder 4430 has latest status Enroute
+2026-09-19 20:39:40,421 INFO Responder 4419 has latest status Arrived
+2026-09-19 20:39:40,422 INFO Responder 4410 has latest status Arrived
+2026-09-19 20:39:40,423 INFO Responder 4436 has latest status Arrived
+2026-09-19 20:39:40,424 INFO Responder 4422 has latest status Arrived
+2026-09-19 20:39:40,424 INFO Responder 4423 has latest status Arrived
+2026-09-19 20:39:40,425 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:39:40,425 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:39:40,426 INFO Responder 4416 has latest status Enroute
+2026-09-19 20:39:40,427 INFO Responder 4425 has latest status Enroute
+2026-09-19 20:39:40,427 INFO Responder 4426 has latest status Enroute
+2026-09-19 20:39:40,428 INFO Responder 4427 has latest status Arrived
+2026-09-19 20:39:40,429 INFO Responder 4433 has latest status Enroute
+2026-09-19 20:39:40,429 INFO Responder 4437 has latest status Arrived
+2026-09-19 20:39:40,430 INFO Responder 4429 has latest status Arrived
+2026-09-19 20:39:40,431 INFO Create: call: CRASH , PROPERTY DAMAGE; responder: 313B5 RPD; status: Enroute
+2026-09-19 20:40:25,607 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 20:40:25,626 INFO Fetched 37 active call(s) as of 9/19/2026 8:40:25 PM
+2026-09-19 20:40:25,712 INFO HTTP Request: GET http://localhost:8091/search?q=1900+REDD+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:40:25,712 INFO Geocoded '1900-BLK REDD ST' -> 37.5456647, -77.4174445
+2026-09-19 20:40:25,807 INFO HTTP Request: GET http://localhost:8091/search?q=1100+CANTERBURY+RIDGE+Road%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:40:25,807 WARNING No Nominatim match for '1100-BLK CANTERBURY RIDGE RD' (query '1100 CANTERBURY RIDGE Road, Richmond, VA')
+2026-09-19 20:40:25,810 INFO Responder 4403 has latest status Arrived
+2026-09-19 20:40:25,811 INFO Responder 4404 has latest status Arrived
+2026-09-19 20:40:25,811 INFO Responder 4438 has latest status Dispatched
+2026-09-19 20:40:25,812 INFO Responder 4405 has latest status Dispatched
+2026-09-19 20:40:25,813 INFO Responder 4406 has latest status Arrived
+2026-09-19 20:40:25,814 INFO Responder 4407 has latest status Enroute
+2026-09-19 20:40:25,814 INFO Responder 4408 has latest status Arrived
+2026-09-19 20:40:25,815 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:40:25,815 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:40:25,816 INFO Responder 4412 has latest status Enroute
+2026-09-19 20:40:25,817 INFO Responder 4413 has latest status Arrived
+2026-09-19 20:40:25,818 INFO Responder 4415 has latest status Enroute
+2026-09-19 20:40:25,819 INFO Responder 4420 has latest status Arrived
+2026-09-19 20:40:25,819 INFO Responder 4421 has latest status Enroute
+2026-09-19 20:40:25,820 INFO Responder 4430 has latest status Enroute
+2026-09-19 20:40:25,821 INFO Responder 4419 has latest status Arrived
+2026-09-19 20:40:25,822 INFO Responder 4410 has latest status Arrived
+2026-09-19 20:40:25,822 INFO Responder 4436 has latest status Arrived
+2026-09-19 20:40:25,826 INFO Responder 4422 has latest status Arrived
+2026-09-19 20:40:25,827 INFO Responder 4423 has latest status Arrived
+2026-09-19 20:40:25,828 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:40:25,828 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:40:25,829 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:40:25,829 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:40:25,830 INFO Responder 4416 has latest status Enroute
+2026-09-19 20:40:25,830 INFO Responder 4425 has latest status Enroute
+2026-09-19 20:40:25,831 INFO Responder 4426 has latest status Enroute
+2026-09-19 20:40:25,832 INFO Responder 4427 has latest status Arrived
+2026-09-19 20:40:25,832 INFO Responder 4433 has latest status Enroute
+2026-09-19 20:40:25,833 INFO Responder 4437 has latest status Arrived
+2026-09-19 20:40:25,834 INFO Responder 4429 has latest status Arrived
+2026-09-19 20:40:25,836 INFO Responder 4435 has latest status Enroute
+2026-09-19 20:40:25,837 INFO Responder 4439 has latest status Arrived
+2026-09-19 20:40:25,838 INFO Create: call: UNNECESSARY NOISE , INVESTIGATE; responder: 313A5 RPD; status: Enroute
+2026-09-19 20:41:10,910 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 20:41:10,942 INFO Fetched 37 active call(s) as of 9/19/2026 8:41:10 PM
+2026-09-19 20:41:10,970 INFO Responder 4403 has latest status Arrived
+2026-09-19 20:41:10,971 INFO Responder 4404 has latest status Arrived
+2026-09-19 20:41:10,972 INFO Responder 4438 has latest status Dispatched
+2026-09-19 20:41:10,972 INFO Responder 4405 has latest status Dispatched
+2026-09-19 20:41:10,973 INFO Responder 4406 has latest status Arrived
+2026-09-19 20:41:10,974 INFO Responder 4407 has latest status Enroute
+2026-09-19 20:41:10,974 INFO Responder 4408 has latest status Arrived
+2026-09-19 20:41:10,975 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:41:10,976 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:41:10,978 INFO Responder 4413 has latest status Arrived
+2026-09-19 20:41:10,979 INFO Responder 4415 has latest status Enroute
+2026-09-19 20:41:10,980 INFO Responder 4420 has latest status Arrived
+2026-09-19 20:41:10,980 INFO Responder 4421 has latest status Enroute
+2026-09-19 20:41:10,981 INFO Responder 4430 has latest status Enroute
+2026-09-19 20:41:10,982 INFO Responder 4419 has latest status Arrived
+2026-09-19 20:41:10,983 INFO Responder 4410 has latest status Arrived
+2026-09-19 20:41:10,984 INFO Responder 4436 has latest status Arrived
+2026-09-19 20:41:10,984 INFO Responder 4441 has latest status Dispatched
+2026-09-19 20:41:10,985 INFO Responder 4442 has latest status Enroute
+2026-09-19 20:41:10,986 INFO Create: call: CRASH , PROPERTY DAMAGE; responder: 311B5 RPD; status: Arrived
+2026-09-19 20:41:10,988 INFO Responder 4422 has latest status Arrived
+2026-09-19 20:41:10,988 INFO Responder 4423 has latest status Arrived
+2026-09-19 20:41:10,989 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:41:10,990 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:41:10,990 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:41:10,991 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:41:10,991 INFO Responder 4416 has latest status Enroute
+2026-09-19 20:41:10,992 INFO Responder 4425 has latest status Enroute
+2026-09-19 20:41:10,993 INFO Responder 4426 has latest status Enroute
+2026-09-19 20:41:10,994 INFO Responder 4427 has latest status Arrived
+2026-09-19 20:41:10,994 INFO Responder 4433 has latest status Enroute
+2026-09-19 20:41:10,995 INFO Responder 4437 has latest status Arrived
+2026-09-19 20:41:10,996 INFO Responder 4429 has latest status Arrived
+2026-09-19 20:41:10,996 INFO Responder 4443 has latest status Enroute
+2026-09-19 20:41:10,997 INFO Responder 4439 has latest status Arrived
+2026-09-19 20:41:10,998 INFO Responder 4440 has latest status Enroute
+2026-09-19 20:41:10,998 INFO Create: call: CRASH , PROPERTY DAMAGE; responder: 313B5 RPD; status: Arrived
+2026-09-19 20:41:56,069 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 20:41:56,083 INFO Fetched 37 active call(s) as of 9/19/2026 8:41:56 PM
+2026-09-19 20:41:56,113 INFO Responder 4403 has latest status Arrived
+2026-09-19 20:41:56,115 INFO Responder 4404 has latest status Arrived
+2026-09-19 20:41:56,115 INFO Responder 4438 has latest status Dispatched
+2026-09-19 20:41:56,116 INFO Responder 4405 has latest status Dispatched
+2026-09-19 20:41:56,117 INFO Responder 4406 has latest status Arrived
+2026-09-19 20:41:56,117 INFO Responder 4407 has latest status Enroute
+2026-09-19 20:41:56,118 INFO Responder 4408 has latest status Arrived
+2026-09-19 20:41:56,119 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:41:56,119 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:41:56,120 INFO Responder 4413 has latest status Arrived
+2026-09-19 20:41:56,122 INFO Responder 4415 has latest status Enroute
+2026-09-19 20:41:56,126 INFO Responder 4421 has latest status Enroute
+2026-09-19 20:41:56,127 INFO Responder 4430 has latest status Enroute
+2026-09-19 20:41:56,128 INFO Responder 4419 has latest status Arrived
+2026-09-19 20:41:56,130 INFO Responder 4410 has latest status Arrived
+2026-09-19 20:41:56,131 INFO Responder 4436 has latest status Arrived
+2026-09-19 20:41:56,132 INFO Responder 4441 has latest status Dispatched
+2026-09-19 20:41:56,132 INFO Responder 4442 has latest status Enroute
+2026-09-19 20:41:56,133 INFO Responder 4412 has latest status Arrived
+2026-09-19 20:41:56,134 INFO Responder 4422 has latest status Arrived
+2026-09-19 20:41:56,135 INFO Responder 4423 has latest status Arrived
+2026-09-19 20:41:56,136 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:41:56,136 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:41:56,137 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:41:56,138 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:41:56,139 INFO Responder 4416 has latest status Enroute
+2026-09-19 20:41:56,140 INFO Responder 4425 has latest status Enroute
+2026-09-19 20:41:56,141 INFO Responder 4426 has latest status Enroute
+2026-09-19 20:41:56,142 INFO Responder 4427 has latest status Arrived
+2026-09-19 20:41:56,143 INFO Responder 4433 has latest status Enroute
+2026-09-19 20:41:56,143 INFO Responder 4437 has latest status Arrived
+2026-09-19 20:41:56,144 INFO Responder 4429 has latest status Arrived
+2026-09-19 20:41:56,145 INFO Responder 4443 has latest status Enroute
+2026-09-19 20:41:56,146 INFO Responder 4439 has latest status Arrived
+2026-09-19 20:41:56,146 INFO Responder 4440 has latest status Enroute
+2026-09-19 20:41:56,147 INFO Responder 4435 has latest status Arrived
+2026-09-19 20:42:41,226 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 20:42:41,240 INFO Fetched 34 active call(s) as of 9/19/2026 8:42:41 PM
+2026-09-19 20:42:41,334 INFO HTTP Request: GET http://localhost:8091/search?q=CUMBERLAND+Street+and+South+PINE+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 20:42:41,335 WARNING No Nominatim match for 'CUMBERLAND ST/S PINE ST RICH' (query 'CUMBERLAND Street and South PINE Street, Richmond, VA')
+2026-09-19 20:42:41,337 INFO Responder 4403 has latest status Arrived
+2026-09-19 20:42:41,338 INFO Responder 4404 has latest status Arrived
+2026-09-19 20:42:41,339 INFO Responder 4438 has latest status Dispatched
+2026-09-19 20:42:41,340 INFO Responder 4405 has latest status Dispatched
+2026-09-19 20:42:41,340 INFO Responder 4406 has latest status Arrived
+2026-09-19 20:42:41,341 INFO Responder 4407 has latest status Enroute
+2026-09-19 20:42:41,342 INFO Responder 4408 has latest status Arrived
+2026-09-19 20:42:41,343 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:42:41,343 INFO Responder 4409 has latest status Arrived
+2026-09-19 20:42:41,344 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:42:41,344 INFO Responder 4411 has latest status Arrived
+2026-09-19 20:42:41,345 INFO Responder 4413 has latest status Arrived
+2026-09-19 20:42:41,346 INFO Responder 4415 has latest status Enroute
+2026-09-19 20:42:41,347 INFO Responder 4421 has latest status Enroute
+2026-09-19 20:42:41,348 INFO Responder 4430 has latest status Enroute
+2026-09-19 20:42:41,348 INFO Responder 4419 has latest status Arrived
+2026-09-19 20:42:41,349 INFO Responder 4410 has latest status Arrived
+2026-09-19 20:42:41,350 INFO Responder 4436 has latest status Arrived
+2026-09-19 20:42:41,350 INFO Responder 4441 has latest status Dispatched
+2026-09-19 20:42:41,351 INFO Responder 4442 has latest status Enroute
+2026-09-19 20:42:41,351 INFO Responder 4412 has latest status Arrived
+2026-09-19 20:42:41,352 INFO Responder 4422 has latest status Arrived
+2026-09-19 20:42:41,353 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:42:41,353 INFO Responder 4424 has latest status Arrived
+2026-09-19 20:42:41,354 INFO Responder 4416 has latest status Enroute
+2026-09-19 20:42:41,355 INFO Responder 4425 has latest status Enroute
+2026-09-19 20:42:41,355 INFO Responder 4426 has latest status Enroute
+2026-09-19 20:42:41,356 INFO Responder 4433 has latest status Enroute
+2026-09-19 20:42:41,357 INFO Responder 4437 has latest status Arrived
+2026-09-19 20:42:41,357 INFO Responder 4429 has latest status Arrived
+2026-09-19 20:42:41,358 INFO Responder 4440 has latest status Enroute
+2026-09-19 20:42:41,359 INFO Responder 4435 has latest status Arrived
+2026-09-19 20:42:41,362 INFO Create: call: ; responder: E22 RFD; status: Arrived
+2026-09-19 21:00:28,243 INFO HTTP Request: GET https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls "HTTP/1.1 200 OK"
+2026-09-19 21:00:28,250 INFO Fetched 28 active call(s) as of 9/19/2026 9:00:28 PM
+2026-09-19 21:00:28,323 INFO HTTP Request: GET http://localhost:8091/search?q=6900+MARLOWE+Road%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 21:00:28,323 INFO Geocoded '6900-BLK MARLOWE RD' -> 37.5153471, -77.5232898
+2026-09-19 21:00:28,365 INFO HTTP Request: GET http://localhost:8091/search?q=5400+HULL+STREET+Road%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 21:00:28,365 INFO Geocoded '5400-BLK HULL STREET RD' -> 37.4899001, -77.4939365
+2026-09-19 21:00:28,433 INFO HTTP Request: GET http://localhost:8091/search?q=1000+HIOAKS+Road%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 21:00:28,433 INFO Geocoded '1000-BLK HIOAKS RD' -> 37.5113106, -77.5248705
+2026-09-19 21:00:28,458 INFO HTTP Request: GET http://localhost:8091/search?q=4400+FLUVANNA+Avenue%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 21:00:28,458 INFO Geocoded '4400-BLK FLUVANNA AVE' -> 37.4654582, -77.4570302
+2026-09-19 21:00:28,495 INFO HTTP Request: GET http://localhost:8091/search?q=1700+PETER+PAUL+Boulevard%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 21:00:28,495 INFO Geocoded '1700-BLK PETER PAUL BLVD' -> 37.5435051, -77.406351
+2026-09-19 21:00:28,520 INFO HTTP Request: GET http://localhost:8091/search?q=1600+TENNYSON+Avenue%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 21:00:28,521 INFO Geocoded '1600-BLK TENNYSON AVE' -> 37.4865494, -77.5055394
+2026-09-19 21:00:28,557 INFO HTTP Request: GET http://localhost:8091/search?q=3000+MONUMENT+Avenue%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 21:00:28,557 INFO Geocoded '3000-BLK MONUMENT AVE' -> 37.5626501, -77.4741261
+2026-09-19 21:00:28,584 INFO HTTP Request: GET http://localhost:8091/search?q=500+West+MARSHALL+Street%2C+Richmond%2C+VA&format=json&limit=1&countrycodes=us&viewbox=-77.65%2C37.65%2C-77.25%2C37.40&bounded=1 "HTTP/1.1 200 OK"
+2026-09-19 21:00:28,584 INFO Geocoded '500-BLK W MARSHALL ST' -> 37.5492782, -77.4454176
+2026-09-19 21:00:28,586 INFO Responder 4403 has latest status Arrived
+2026-09-19 21:00:28,589 INFO Responder 4404 has latest status Arrived
+2026-09-19 21:00:28,590 INFO Responder 4438 has latest status Dispatched
+2026-09-19 21:00:28,591 INFO Responder 4405 has latest status Dispatched
+2026-09-19 21:00:28,591 INFO Responder 4406 has latest status Arrived
+2026-09-19 21:00:28,592 INFO Responder 4408 has latest status Arrived
+2026-09-19 21:00:28,593 INFO Responder 4407 has latest status Enroute
+2026-09-19 21:00:28,593 INFO Responder 4430 has latest status Enroute
+2026-09-19 21:00:28,594 INFO Responder 4419 has latest status Arrived
+2026-09-19 21:00:28,594 INFO Responder 4410 has latest status Arrived
+2026-09-19 21:00:28,595 INFO Responder 4435 has latest status Arrived
+2026-09-19 21:00:28,596 INFO Create: call: UNNECESSARY NOISE , INVESTIGATE; responder: 313A5 RPD; status: Arrived
+2026-09-19 21:00:28,597 INFO Create: call: DOMESTIC TROUBLE , INVESTIGATE; responder: 113B4 RPD; status: Arrived
+2026-09-19 21:00:28,601 INFO Create: call: LARCENY , TAKE A REPORT (Field Unit Required); responder: 312C8 RPD; status: Arrived
+2026-09-19 21:00:28,603 INFO Responder 4422 has latest status Arrived
+2026-09-19 21:00:28,604 INFO Responder 4443 has latest status Arrived
