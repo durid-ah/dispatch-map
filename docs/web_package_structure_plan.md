@@ -1,6 +1,6 @@
-# Web Package Architecture & Directory Structure Plan
+# Web Package Architecture & Phased Implementation Plan
 
-This proposal outlines the structure and file organization for `packages/web` in the **dispatch-map** monorepo, covering **pages**, **component hierarchy**, and **custom TanStack Query hooks**.
+This document outlines the architecture, directory structure, and **phased implementation plan** for `packages/web` in the **dispatch-map** monorepo, covering **pages**, **component hierarchy**, and **TanStack Query hooks**.
 
 ---
 
@@ -8,11 +8,7 @@ This proposal outlines the structure and file organization for `packages/web` in
 
 The `packages/web` application is a Vite + React 19 + TypeScript frontend that displays emergency dispatch calls on an interactive Leaflet map and communicates with a FastAPI backend (`packages/api`) via REST (`/events`).
 
-Currently, `packages/web/src` has a flat structure (`App.tsx`, `main.tsx`, `index.css`). We want a clean, scalable folder architecture that:
-1. Organizes components into clear layers: **pages**, **layout**, **domain features**, and **common/shared UI**.
-2. Establishes a scalable pattern for **TanStack React Query custom hooks** (query key factory, typed fetchers, and background refetching).
-3. Configures path aliasing (`@/*`) in Vite and TypeScript.
-4. Remains **100% forward-compatible** with Tailwind CSS, shadcn/ui, and a routing library (e.g. TanStack Router or React Router) when they are introduced in future tasks.
+We are organizing `packages/web` into a modular, feature-based architecture (pages, domain features, layout, and common UI) executed across **6 small, executable, and testable phases** to ensure zero regressions and incremental verifiability.
 
 ---
 
@@ -32,8 +28,9 @@ A **Feature-Based (Vertical Slice)** architecture groups domain logic (events, m
 
 ```mermaid
 graph TD
-    App["App.tsx (Root Shell)"] --> Page["Pages (src/pages/dispatch-page.tsx)"]
-    Page --> Layout["Layout (src/components/layout/)"]
+    App["App.tsx (Root Shell)"] --> Layout["Layout (src/components/layout/)"]
+    Layout --> Header["AppHeader (src/components/layout/)"]
+    Layout --> Page["Pages (src/pages/dispatch-page.tsx)"]
     Page --> EventFeature["Events Feature (src/features/events/)"]
     Page --> MapFeature["Map Feature (src/features/map/)"]
     
@@ -63,7 +60,7 @@ graph TD
 ```
 packages/web/
 ├── vite.config.ts                  # Path alias '@' + API proxy (/events)
-├── tsconfig.app.json               # Path alias baseUrl & paths (@/*)
+├── tsconfig.app.json               # Path alias paths (@/*)
 ├── package.json
 └── src/
     ├── assets/                     # Static media (icons, SVGs)
@@ -116,7 +113,7 @@ packages/web/
 
 ---
 
-## Detailed Component & Hook Specifications
+## Detailed Specifications
 
 ### 1. TanStack Query Architecture (`src/features/events/api/` & `src/lib/`)
 
@@ -151,7 +148,7 @@ export const eventKeys = {
 #### `src/features/events/api/get-events.ts`
 Strongly typed API client function targeting `/events`:
 ```ts
-import type { EventWithCoords } from '../types'
+import type { EventWithCoords } from '../types/index.ts'
 
 export interface GetEventsParams {
   hours?: number
@@ -173,8 +170,8 @@ export async function getEvents({ hours = 24 }: GetEventsParams = {}): Promise<E
 Custom hook wrapping TanStack's `useQuery`:
 ```ts
 import { useQuery } from '@tanstack/react-query'
-import { getEvents, type GetEventsParams } from './get-events'
-import { eventKeys } from './query-keys'
+import { getEvents, type GetEventsParams } from './get-events.ts'
+import { eventKeys } from './query-keys.ts'
 
 export function useEventsQuery(params: GetEventsParams = {}) {
   return useQuery({
@@ -187,167 +184,146 @@ export function useEventsQuery(params: GetEventsParams = {}) {
 
 ---
 
-### 2. Component Hierarchy & Layering
+## Phased Implementation Plan
 
-1. **Pages (`src/pages/`)**:
-   - `dispatch-page.tsx`: Coordinates state between the map and the event list (e.g., currently selected event ID, hovered marker). It invokes `useEventsQuery()` and passes data into feature components.
-2. **Layout (`src/components/layout/`)**:
-   - `app-layout.tsx`: Top-level flex/grid layout providing header and main viewport container.
-   - `app-header.tsx`: App title ("Dispatch Map") and filter/refresh controls.
-3. **Features (`src/features/`)**:
-   - `features/events/components/event-list.tsx`: Sidebar/overlay listing recent incidents.
-   - `features/events/components/event-card.tsx`: Individual incident card (call type, address, timestamp).
-   - `features/map/components/dispatch-map.tsx`: Encapsulates Leaflet `MapContainer`, `TileLayer`, and maps over incidents to render `event-marker.tsx`.
-4. **Common UI (`src/components/common/`)**:
-   - `loading-spinner.tsx`: Standard loading spinner.
-5. **Reserved Primitives (`src/components/ui/`)**:
-   - Folder reserved for future shadcn components (`button.tsx`, `card.tsx`, `sheet.tsx`).
-
----
-
-### 3. Path Aliases & Vite Proxy Configuration
-
-#### `packages/web/vite.config.ts`
-```ts
-import path from 'node:path'
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
-
-export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
-  server: {
-    proxy: {
-      '/events': {
-        target: 'http://127.0.0.1:8000',
-        changeOrigin: true,
-      },
-    },
-  },
-  build: {
-    outDir: '../api/static/app',
-    emptyOutDir: true,
-  },
-})
-```
-
-#### `packages/web/tsconfig.app.json`
-```json
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
-}
+```mermaid
+graph TD
+    P1["Phase 1: Tooling & Infrastructure\n(vite alias, proxy, queryClient in main.tsx)"] --> P2["Phase 2: Events Domain Layer\n(types, query-keys, getEvents, useEventsQuery)"]
+    P1 --> P3["Phase 3: Layout & Common UI\n(LoadingSpinner, AppHeader, AppLayout)"]
+    P2 --> P4["Phase 4: Events UI Components\n(EventCard, EventList)"]
+    P1 --> P5["Phase 5: Map UI Components\n(EventMarker, DispatchMap + controller)"]
+    P3 --> P6["Phase 6: Page Orchestration & Styling\n(DispatchPage, App.tsx, CSS)"]
+    P4 --> P6
+    P5 --> P6
 ```
 
 ---
 
-## Proposed Changes
+### Phase 1: Tooling & Core Infrastructure
+**Goal**: Configure path aliases (`@/*`) and backend proxy so subsequent feature files can use clean imports and proxy calls without breaking the existing build.
 
-### Configuration
-#### [MODIFY] `packages/web/vite.config.ts`
-- Add `@` path alias pointing to `./src`.
-- Configure `/events` proxy rule to point to `http://127.0.0.1:8000`.
+#### Changes:
+- **[MODIFY] `packages/web/vite.config.ts`**:
+  - Add `@` alias resolving to `./src` using `fileURLToPath(new URL('./src', import.meta.url))`.
+  - Update proxy from `/items` to `/events` pointing to `http://127.0.0.1:8000`.
+- **[MODIFY] `packages/web/tsconfig.app.json`**:
+  - Configure `paths: { "@/*": ["./src/*"] }` (standalone without deprecated `baseUrl`).
+- **[MODIFY] `packages/web/src/main.tsx`**:
+  - Replace local `new QueryClient()` instantiation with `queryClient` imported from `@/lib/query-client.ts`.
 
-#### [MODIFY] `packages/web/tsconfig.app.json`
-- Add `baseUrl: "."` and `paths: { "@/*": ["./src/*"] }`.
-
----
-
-### Core Libraries & Types
-#### [NEW] `packages/web/src/lib/query-client.ts`
-- Export pre-configured `QueryClient` instance.
-
-#### [MODIFY] `packages/web/src/main.tsx`
-- Import `queryClient` from `@/lib/query-client`.
-
-#### [NEW] `packages/web/src/types/api.ts`
-- Generic API response and error types.
+#### Verification:
+```bash
+npm run build --prefix packages/web
+npm run lint --prefix packages/web
+```
 
 ---
 
-### Feature: Events
-#### [NEW] `packages/web/src/features/events/types/index.ts`
-- Export `EventWithCoords` matching FastAPI SQLModel.
+### Phase 2: Events Domain Layer (Types & TanStack Query)
+**Goal**: Build the data fetching and caching layer for emergency dispatch calls.
 
-#### [NEW] `packages/web/src/features/events/api/query-keys.ts`
-- Export `eventKeys` query key factory.
+#### Changes:
+- **[NEW] `packages/web/src/features/events/types/index.ts`**:
+  - Define `EventWithCoords` matching the FastAPI SQLModel response schema.
+- **[NEW] `packages/web/src/features/events/api/query-keys.ts`**:
+  - Query key factory: `eventKeys.all`, `eventKeys.lists()`, `eventKeys.list(params)`, `eventKeys.detail(id)`.
+- **[NEW] `packages/web/src/features/events/api/get-events.ts`**:
+  - Typed fetcher `getEvents({ hours = 24 })` calling `/events?hours=...`.
+- **[NEW] `packages/web/src/features/events/api/use-events-query.ts`**:
+  - TanStack `useQuery` wrapper hook with 30s background refetch interval.
 
-#### [NEW] `packages/web/src/features/events/api/get-events.ts`
-- `getEvents` fetcher function.
-
-#### [NEW] `packages/web/src/features/events/api/use-events-query.ts`
-- `useEventsQuery` custom hook.
-
-#### [NEW] `packages/web/src/features/events/components/event-card.tsx`
-- Presentational card for a single call incident.
-
-#### [NEW] `packages/web/src/features/events/components/event-list.tsx`
-- Scrollable list of active incidents with selection handler.
-
----
-
-### Feature: Map
-#### [NEW] `packages/web/src/features/map/components/dispatch-map.tsx`
-- Extracted and enhanced Leaflet `MapContainer` with marker rendering.
-
-#### [NEW] `packages/web/src/features/map/components/event-marker.tsx`
-- Leaflet `Marker` with `Popup` showing call details.
+#### Verification:
+```bash
+npm run build --prefix packages/web
+npm run lint --prefix packages/web
+```
 
 ---
 
-### Layout & Common UI
-#### [NEW] `packages/web/src/components/common/loading-spinner.tsx`
-- Loading spinner component.
+### Phase 3: Layout & Common UI Components
+**Goal**: Create reusable presentation shell elements and loading indicators.
 
-#### [NEW] `packages/web/src/components/layout/app-header.tsx`
-- Header bar with title and refresh status.
+#### Changes:
+- **[NEW] `packages/web/src/components/common/loading-spinner.tsx`**:
+  - Reusable CSS loading spinner component.
+- **[NEW] `packages/web/src/components/layout/app-header.tsx`**:
+  - Header bar with title ("Dispatch Map"), live polling pulse dot, time range selector (6h, 12h, 24h, 48h, 7d), active incident count, and manual refresh button.
+- **[NEW] `packages/web/src/components/layout/app-layout.tsx`**:
+  - Shell component establishing header on top and full-height viewport body.
 
-#### [NEW] `packages/web/src/components/layout/app-layout.tsx`
-- Application shell structuring header and body.
-
----
-
-### Pages & App
-#### [NEW] `packages/web/src/pages/dispatch-page.tsx`
-- Orchestrates `useEventsQuery`, `DispatchMap`, and `EventList`.
-
-#### [MODIFY] `packages/web/src/App.tsx`
-- Simplified root component rendering `DispatchPage` inside `AppLayout`.
+#### Verification:
+```bash
+npm run build --prefix packages/web
+npm run lint --prefix packages/web
+```
 
 ---
 
-## User Review Required
+### Phase 4: Event Feature Components (Card & List)
+**Goal**: Build the incident sidebar feed with search, status badges, and selection.
+
+#### Changes:
+- **[NEW] `packages/web/src/features/events/components/event-card.tsx`**:
+  - Incident card displaying call type badge, formatted time, address, coordinates status, and active selection state.
+- **[NEW] `packages/web/src/features/events/components/event-list.tsx`**:
+  - Filter input for text search, incident count summary, scrollable card list, loading spinner, error message with retry, and selection callback.
+
+#### Verification:
+```bash
+npm run build --prefix packages/web
+npm run lint --prefix packages/web
+```
+
+---
+
+### Phase 5: Map Feature Components (Markers & Leaflet Map)
+**Goal**: Encapsulate Leaflet map container, custom marker rendering, and camera pan interactions.
+
+#### Changes:
+- **[NEW] `packages/web/src/features/map/components/event-marker.tsx`**:
+  - Custom SVG/DivIcon Leaflet marker (color-coded by call type, pulsing pin) and `Popup` displaying incident metadata.
+- **[NEW] `packages/web/src/features/map/components/dispatch-map.tsx`**:
+  - Encapsulates `MapContainer`, `TileLayer`, marker iteration for geocoded events, and an internal map controller that smoothly pans/flies to an incident when selected.
+
+#### Verification:
+```bash
+npm run build --prefix packages/web
+npm run lint --prefix packages/web
+```
+
+---
+
+### Phase 6: Page Orchestration, App Wiring & Styling
+**Goal**: Wire the full system together into `DispatchPage`, update `App.tsx`, and apply modern command-center styling.
+
+#### Changes:
+- **[NEW] `packages/web/src/pages/dispatch-page.tsx`**:
+  - Coordinates state: `hours` window filter, `selectedEventId`, `useEventsQuery({ hours })`.
+  - Passes data and event handlers into `AppHeader`, `EventList`, and `DispatchMap`.
+- **[MODIFY] `packages/web/src/App.tsx`**:
+  - Renders `DispatchPage` inside `AppLayout`.
+- **[MODIFY] `packages/web/src/App.css` & `packages/web/src/index.css`**:
+  - Dark command-center theme (slate/indigo/amber dispatch accents).
+  - Responsive split layout (sidebar + full map).
+  - Custom Leaflet popup styling, scrollbar styling, and marker animations.
+
+#### Verification:
+1. **Automated Checks**:
+   ```bash
+   npm run build --prefix packages/web
+   npm run lint --prefix packages/web
+   ```
+2. **Manual Check**:
+   - Run `npm run dev --prefix packages/web` and verify map, sidebar, card selection, and filter interactions.
+
+---
+
+## User Review & Technical Notes
 
 > [!NOTE]
 > **No New External Dependencies Required**:
 > The plan uses packages already installed in `packages/web` (`react`, `react-dom`, `@tanstack/react-query`, `leaflet`, `react-leaflet`, `vite`, `typescript`).
 
----
-
-## Verification Plan
-
-### Automated Tests & Quality Checks
-1. **Type Checking & Build**:
-   ```bash
-   npm run build --prefix packages/web
-   ```
-   Validates that all `@/*` path aliases resolve properly and TypeScript passes with zero errors.
-
-2. **Linting**:
-   ```bash
-   npm run lint --prefix packages/web
-   ```
-   Ensures code style and syntax adhere to project lint rules.
-
-### Manual Verification
-1. Start the Vite dev server (`npm run dev --prefix packages/web`).
-2. Verify the map loads, markers render from `/events`, and the event list renders alongside the map.
-3. Verify that directory structure cleanly separates features, pages, components, and hooks.
+> [!IMPORTANT]
+> **Leaflet Default Marker Icon Bundling in Vite**:
+> Default Leaflet marker images (`marker-icon.png`, `marker-shadow.png`) often fail to resolve in modern Vite bundlers due to Leaflet's legacy relative URL detection. We will implement crisp SVG-based `L.divIcon` markers with dispatch status indicators, while also applying the standard Leaflet default icon fix as a fallback.
