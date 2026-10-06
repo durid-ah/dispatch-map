@@ -6,7 +6,22 @@ Monorepo with a FastAPI backend (`packages/api`), React frontend (`packages/web`
 
 The React app lives in `packages/web` (Vite). In production, build output goes to `packages/api/static/app` and FastAPI serves it from the same origin.
 
-### Development (two terminals)
+### Development
+
+You can use the `./run-dev.sh` script to run services individually:
+
+```bash
+# Terminal 1 — API
+./run-dev.sh api
+
+# Terminal 2 — React (proxies /items to FastAPI)
+./run-dev.sh web
+
+# Terminal 3 — Dispatch Consumer (background scraper)
+./run-dev.sh consumer
+```
+
+Alternatively, you can run them directly:
 
 ```bash
 # Terminal 1 — API
