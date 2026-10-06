@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import L from 'leaflet'
-import { Marker, Popup } from 'react-leaflet'
+import { Marker } from 'react-leaflet'
 import type { EventWithCoords } from '@/features/events/types/index.ts'
 
 export interface EventMarkerProps {
@@ -43,7 +43,6 @@ function createMarkerIcon(callType: string, isSelected: boolean): L.DivIcon {
 
 export function EventMarker({ event, isSelected = false, onSelect }: EventMarkerProps) {
   const markerRef = useRef<L.Marker | null>(null)
-  const { category } = getCategoryInfo(event.call_type)
 
   const icon = useMemo(
     () => createMarkerIcon(event.call_type, isSelected),
@@ -65,27 +64,6 @@ export function EventMarker({ event, isSelected = false, onSelect }: EventMarker
         click: () => onSelect?.(event),
       }}
     >
-      <Popup className="dispatch-leaflet-popup">
-        <div className="popup-body">
-          <div className="popup-badge-row">
-            <span className={`event-call-badge badge-${category}`}>
-              {event.call_type}
-            </span>
-            <span className="popup-external-id">#{event.external_id}</span>
-          </div>
-
-          <p className="popup-location-text">{event.location}</p>
-
-          <div className="popup-meta-row">
-            <span>
-              🕒 {new Date(event.time_received).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </span>
-          </div>
-        </div>
-      </Popup>
     </Marker>
   )
 }

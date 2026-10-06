@@ -102,7 +102,6 @@ export function EventCard({ event, isSelected = false, onSelect }: EventCardProp
       </div>
 
       <div className="event-card-footer">
-        <span className="event-external-id">#{event.external_id}</span>
         <span className={`event-coords-badge ${hasCoords ? 'mapped' : 'unmapped'}`}>
           {hasCoords ? '📍 Mapped' : '⏳ Pending'}
         </span>

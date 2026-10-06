@@ -32,8 +32,7 @@ export function EventList({
     return events.filter(
       (ev) =>
         ev.call_type.toLowerCase().includes(query) ||
-        ev.location.toLowerCase().includes(query) ||
-        ev.external_id.toLowerCase().includes(query),
+        ev.location.toLowerCase().includes(query),
     )
   }, [events, searchQuery])
 
