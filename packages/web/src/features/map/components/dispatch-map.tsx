@@ -38,7 +38,7 @@ export function DispatchMap({
   onSelectEvent,
   center = DEFAULT_CENTER,
   zoom = DEFAULT_ZOOM,
-  className = 'dispatch-map-container',
+  className = 'flex-1 h-full min-h-[300px] relative bg-background',
 }: DispatchMapProps) {
   const mappedEvents = useMemo(() => {
     return events.filter(
@@ -61,7 +61,7 @@ export function DispatchMap({
         center={center}
         zoom={zoom}
         scrollWheelZoom={true}
-        className="leaflet-map-root"
+        className="h-full w-full bg-background"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'

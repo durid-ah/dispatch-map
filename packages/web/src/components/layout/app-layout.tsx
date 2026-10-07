@@ -7,9 +7,9 @@ export interface AppLayoutProps {
 
 export function AppLayout({ header, children }: AppLayoutProps) {
   return (
-    <div className="app-layout">
-      {header && <div className="app-layout-header">{header}</div>}
-      <main className="app-layout-main">{children}</main>
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-background text-foreground">
+      {header && <div className="shrink-0 z-20">{header}</div>}
+      <main className="flex-1 min-h-0 flex overflow-hidden relative">{children}</main>
     </div>
   )
 }

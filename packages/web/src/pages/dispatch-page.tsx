@@ -44,7 +44,7 @@ export function DispatchPage() {
         />
       }
     >
-      <div className="dispatch-page-content">
+      <div className="flex flex-1 w-full h-full overflow-hidden flex-col-reverse md:flex-row">
         <EventList
           events={events}
           selectedEventId={selectedEventId}

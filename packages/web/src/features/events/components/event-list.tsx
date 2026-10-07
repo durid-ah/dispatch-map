@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react'
-import { LoadingSpinner } from '@/components/common/loading-spinner.tsx'
+import { AlertTriangle, Inbox, Loader2, Search, X } from 'lucide-react'
+import { Button } from '@/components/ui/button.tsx'
+import { Input } from '@/components/ui/input.tsx'
+import { ScrollArea } from '@/components/ui/scroll-area.tsx'
 import { EventCard } from '@/features/events/components/event-card.tsx'
 import type { EventWithCoords } from '@/features/events/types/index.ts'
 
@@ -37,83 +40,71 @@ export function EventList({
   }, [events, searchQuery])
 
   return (
-    <div className="event-list-pane">
-      <div className="event-list-header">
-        <div className="event-search-wrapper">
-          <svg
-            className="search-icon"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.3-4.3" />
-          </svg>
-          <input
+    <div className="w-full md:w-[390px] md:min-w-[320px] md:max-w-[440px] bg-card/40 border-r border-border flex flex-col h-full shrink-0 z-10">
+      <div className="p-3 border-b border-border flex flex-col gap-2 bg-card/60">
+        <div className="relative flex items-center">
+          <Search className="absolute left-2.5 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+          <Input
             type="search"
-            className="event-search-input"
+            className="pl-8 pr-8 h-8 text-xs bg-card border-border"
             placeholder="Search by call type, address, ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             aria-label="Search dispatch events"
           />
           {searchQuery && (
-            <button
+            <Button
               type="button"
-              className="event-search-clear"
+              variant="ghost"
+              size="icon"
+              className="absolute right-1 h-6 w-6 text-muted-foreground hover:text-foreground"
               onClick={() => setSearchQuery('')}
               aria-label="Clear search"
             >
-              ×
-            </button>
+              <X className="h-3.5 w-3.5" />
+            </Button>
           )}
         </div>
 
-        <div className="event-list-stats">
-          <span>
-            {searchQuery
-              ? `${filteredEvents.length} of ${events.length} calls`
-              : `${events.length} calls recorded`}
-          </span>
+        <div className="text-[11px] text-muted-foreground font-medium pl-0.5">
+          {searchQuery
+            ? `${filteredEvents.length} of ${events.length} calls`
+            : `${events.length} calls recorded`}
         </div>
       </div>
 
-      <div className="event-list-content">
+      <div className="flex-1 min-h-0 flex flex-col">
         {isLoading && (
-          <div className="event-list-status">
-            <LoadingSpinner size="lg" label="Loading dispatch calls..." />
-            <p className="status-text">Fetching dispatch events...</p>
+          <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground gap-2">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-xs">Fetching dispatch events...</p>
           </div>
         )}
 
         {isError && !isLoading && (
-          <div className="event-list-status error">
-            <span className="status-icon" aria-hidden="true">⚠️</span>
-            <p className="status-text">
+          <div className="flex flex-col items-center justify-center p-8 text-center text-muted-foreground gap-2">
+            <AlertTriangle className="h-8 w-8 text-destructive" />
+            <p className="text-xs text-destructive-foreground">
               {error?.message || 'Failed to load dispatch events'}
             </p>
             {onRetry && (
-              <button
+              <Button
                 type="button"
-                className="event-list-retry-btn"
+                variant="outline"
+                size="sm"
+                className="mt-2 text-xs h-7"
                 onClick={onRetry}
               >
                 Retry
-              </button>
+              </Button>
             )}
           </div>
         )}
 
         {!isLoading && !isError && filteredEvents.length === 0 && (
-          <div className="event-list-status empty">
-            <span className="status-icon" aria-hidden="true">📋</span>
-            <p className="status-text">
+          <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground gap-2">
+            <Inbox className="h-8 w-8 text-muted-foreground/50" />
+            <p className="text-xs">
               {searchQuery
                 ? `No calls matching "${searchQuery}"`
                 : 'No incidents recorded in this timeframe'}
@@ -122,16 +113,18 @@ export function EventList({
         )}
 
         {!isLoading && !isError && filteredEvents.length > 0 && (
-          <div className="event-card-container">
-            {filteredEvents.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                isSelected={event.id === selectedEventId}
-                onSelect={onSelectEvent}
-              />
-            ))}
-          </div>
+          <ScrollArea className="flex-1 px-3 py-2">
+            <div className="flex flex-col gap-2 pb-2">
+              {filteredEvents.map((event) => (
+                <EventCard
+                  key={event.id}
+                  event={event}
+                  isSelected={event.id === selectedEventId}
+                  onSelect={onSelectEvent}
+                />
+              ))}
+            </div>
+          </ScrollArea>
         )}
       </div>
     </div>

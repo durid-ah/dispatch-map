@@ -1,4 +1,8 @@
+import { MapPin } from 'lucide-react'
+import { Badge } from '@/components/ui/badge.tsx'
+import { Card } from '@/components/ui/card.tsx'
 import type { EventWithCoords } from '@/features/events/types/index.ts'
+import { cn } from '@/lib/utils.ts'
 
 export interface EventCardProps {
   event: EventWithCoords
@@ -33,24 +37,39 @@ function formatRelativeTime(dateString: string): string {
   }
 }
 
-function getCallCategoryClass(callType: string): string {
+function getCallCategoryVariant(
+  callType: string,
+): 'fire' | 'medical' | 'traffic' | 'police' {
   const lower = callType.toLowerCase()
   if (lower.includes('fire') || lower.includes('alarm') || lower.includes('smoke')) {
-    return 'badge-fire'
+    return 'fire'
   }
-  if (lower.includes('med') || lower.includes('ems') || lower.includes('cardiac') || lower.includes('injury')) {
-    return 'badge-medical'
+  if (
+    lower.includes('med') ||
+    lower.includes('ems') ||
+    lower.includes('cardiac') ||
+    lower.includes('injury')
+  ) {
+    return 'medical'
   }
-  if (lower.includes('traffic') || lower.includes('accident') || lower.includes('crash')) {
-    return 'badge-traffic'
+  if (
+    lower.includes('traffic') ||
+    lower.includes('accident') ||
+    lower.includes('crash')
+  ) {
+    return 'traffic'
   }
-  return 'badge-police'
+  return 'police'
 }
 
-export function EventCard({ event, isSelected = false, onSelect }: EventCardProps) {
+export function EventCard({
+  event,
+  isSelected = false,
+  onSelect,
+}: EventCardProps) {
   const hasCoords = event.latitude !== null && event.longitude !== null
   const relativeTime = formatRelativeTime(event.time_received)
-  const categoryClass = getCallCategoryClass(event.call_type)
+  const categoryVariant = getCallCategoryVariant(event.call_type)
 
   const handleClick = () => {
     onSelect?.(event)
@@ -64,48 +83,55 @@ export function EventCard({ event, isSelected = false, onSelect }: EventCardProp
   }
 
   return (
-    <div
+    <Card
       role="button"
       tabIndex={0}
       aria-pressed={isSelected}
-      className={`event-card ${isSelected ? 'selected' : ''}`.trim()}
+      data-event-id={event.id}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      data-event-id={event.id}
+      className={cn(
+        'cursor-pointer p-3 transition-all hover:bg-accent/40 hover:border-slate-600 space-y-2 select-none border-border/70',
+        isSelected &&
+          'bg-accent/70 border-primary ring-1 ring-primary shadow-sm',
+      )}
     >
-      <div className="event-card-header">
-        <span className={`event-call-badge ${categoryClass}`}>
+      <div className="flex items-center justify-between gap-2">
+        <Badge
+          variant={categoryVariant}
+          className="max-w-[210px] truncate text-[11px] font-semibold tracking-wide"
+        >
           {event.call_type}
-        </span>
-        <span className="event-time" title={new Date(event.time_received).toLocaleString()}>
+        </Badge>
+        <span
+          className="text-[11px] text-muted-foreground whitespace-nowrap"
+          title={new Date(event.time_received).toLocaleString()}
+        >
           {relativeTime}
         </span>
       </div>
 
-      <div className="event-card-location">
-        <svg
-          className="location-icon"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-          <circle cx="12" cy="10" r="3" />
-        </svg>
-        <span className="location-text">{event.location}</span>
-      </div>
-
-      <div className="event-card-footer">
-        <span className={`event-coords-badge ${hasCoords ? 'mapped' : 'unmapped'}`}>
-          {hasCoords ? '📍 Mapped' : '⏳ Pending'}
+      <div className="flex items-start gap-1.5 text-xs text-muted-foreground">
+        <MapPin className="h-3.5 w-3.5 shrink-0 mt-0.5 text-muted-foreground/80" />
+        <span className="break-words text-foreground/90 font-medium leading-snug">
+          {event.location}
         </span>
       </div>
-    </div>
+
+      <div className="flex items-center justify-between pt-1 border-t border-border/50 text-[10px]">
+        <span className="font-mono text-muted-foreground">#{event.id}</span>
+        <Badge
+          variant="outline"
+          className={cn(
+            'text-[10px] px-1.5 py-0 font-medium',
+            hasCoords
+              ? 'text-sky-400 border-sky-500/30 bg-sky-500/10'
+              : 'text-muted-foreground/80 border-border',
+          )}
+        >
+          {hasCoords ? '📍 Mapped' : '⏳ Pending'}
+        </Badge>
+      </div>
+    </Card>
   )
 }

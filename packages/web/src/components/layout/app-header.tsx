@@ -1,4 +1,14 @@
-import { LoadingSpinner } from '@/components/common/loading-spinner.tsx'
+import { RotateCw } from 'lucide-react'
+import { Badge } from '@/components/ui/badge.tsx'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select.tsx'
+import { cn } from '@/lib/utils.ts'
 
 export interface AppHeaderProps {
   hours?: number
@@ -24,76 +34,82 @@ export function AppHeader({
   eventCount,
 }: AppHeaderProps) {
   return (
-    <header className="app-header">
-      <div className="app-header-left">
-        <div className="app-header-brand">
-          <span className="app-header-icon" aria-hidden="true">
+    <header className="flex items-center justify-between px-4 py-2.5 gap-4 bg-card/60 backdrop-blur-md border-b border-border">
+      <div className="flex items-center gap-3.5">
+        <div className="flex items-center gap-2.5">
+          <span className="text-xl leading-none select-none" aria-hidden="true">
             🚨
           </span>
-          <div className="app-header-titles">
-            <h1 className="app-header-title">Richmond 911 Dispatch</h1>
-            <span className="app-header-subtitle">Active Emergency CAD Calls</span>
+          <div className="flex flex-col">
+            <h1 className="text-sm font-bold tracking-tight text-foreground leading-tight">
+              Richmond 911 Dispatch
+            </h1>
+            <span className="text-[11px] font-medium text-muted-foreground leading-tight">
+              Active Emergency CAD Calls
+            </span>
           </div>
         </div>
 
-        <div className="app-header-live-badge">
-          <span className="live-pulse-dot" />
-          <span className="live-pulse-text">LIVE</span>
-        </div>
+        <Badge
+          variant="outline"
+          className="gap-1.5 border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-emerald-400"
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_#22c55e] animate-pulse" />
+          <span className="text-[10px] font-bold tracking-wider">LIVE</span>
+        </Badge>
       </div>
 
-      <div className="app-header-right">
+      <div className="flex items-center gap-3">
         {eventCount !== undefined && (
-          <div className="app-header-count">
-            <span className="count-number">{eventCount}</span>
-            <span className="count-label">Calls</span>
-          </div>
+          <Badge
+            variant="secondary"
+            className="gap-1.5 px-2.5 py-1 font-mono text-xs border border-border bg-card/80"
+          >
+            <span className="font-bold text-sky-400">{eventCount}</span>
+            <span className="text-[10px] uppercase font-semibold text-muted-foreground">
+              Calls
+            </span>
+          </Badge>
         )}
 
-        <div className="app-header-controls">
-          <label htmlFor="time-range-select" className="sr-only">
-            Time Range
-          </label>
-          <select
-            id="time-range-select"
-            className="app-header-select"
-            value={hours}
-            onChange={(e) => onHoursChange?.(Number(e.target.value))}
+        <div className="flex items-center gap-2">
+          <Select
+            value={String(hours)}
+            onValueChange={(val) => onHoursChange?.(Number(val))}
           >
-            {TIME_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger
+              className="w-[145px] h-8 text-xs bg-card border-border"
+              aria-label="Time Range"
+            >
+              <SelectValue placeholder="Select range" />
+            </SelectTrigger>
+            <SelectContent align="end">
+              {TIME_OPTIONS.map((opt) => (
+                <SelectItem key={opt.value} value={String(opt.value)}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           {onRefresh && (
-            <button
+            <Button
               type="button"
-              className="app-header-refresh-btn"
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 bg-card border-border text-muted-foreground hover:text-foreground"
               onClick={onRefresh}
               disabled={isFetching}
               title="Refresh data"
               aria-label="Refresh data"
             >
-              {isFetching ? (
-                <LoadingSpinner size="sm" label="Refreshing..." />
-              ) : (
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
-                </svg>
-              )}
-            </button>
+              <RotateCw
+                className={cn(
+                  'h-3.5 w-3.5 transition-transform',
+                  isFetching && 'animate-spin text-primary',
+                )}
+              />
+            </Button>
           )}
         </div>
       </div>

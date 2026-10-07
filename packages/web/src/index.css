@@ -22,24 +22,6 @@
     --input: 217 33% 20%;
     --ring: 217 91% 60%;
     --radius: 0.5rem;
-
-    /* Legacy compatibility for App.css */
-    --bg-app: #0b1120;
-    --bg-header: rgba(15, 23, 42, 0.9);
-    --bg-panel: #0f172a;
-    --bg-card: #1e293b;
-    --bg-card-hover: #273549;
-    --bg-card-selected: #1e3a5f;
-    --border-color: #334155;
-    --border-highlight: #475569;
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --accent-blue: #3b82f6;
-    --accent-red: #ef4444;
-    --accent-green: #10b981;
-    --accent-amber: #f59e0b;
-    --accent-cyan: #06b6d4;
   }
 }
 
@@ -104,4 +86,85 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.4);
+}
+
+/* ==========================================================================
+   Leaflet Map & Custom Markers
+   ========================================================================== */
+
+/* Leaflet Tile Invert for Dark Theme Integration */
+.leaflet-tile {
+  filter: brightness(0.85) contrast(1.15) invert(0.9) hue-rotate(180deg) saturate(0.8);
+}
+
+/* Marker Pins */
+.dispatch-marker-wrapper {
+  background: transparent !important;
+  border: none !important;
+}
+
+.dispatch-marker-pin {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marker-dot {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+  transition: transform 0.15s ease;
+}
+
+.marker-pulse {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: var(--pulse-color, #3b82f6);
+  animation: marker-halo 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  z-index: 1;
+}
+
+@keyframes marker-halo {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.85;
+  }
+  80%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.dispatch-marker-wrapper.marker-selected .marker-dot {
+  transform: scale(1.4);
+  border-color: #fef08a;
+  box-shadow: 0 0 10px rgba(254, 240, 138, 0.8);
+}
+
+/* Custom Popup Overrides */
+.dispatch-leaflet-popup .leaflet-popup-content-wrapper {
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  border-radius: 8px;
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
+  padding: 0;
+}
+
+.dispatch-leaflet-popup .leaflet-popup-content {
+  margin: 0.85rem;
+  line-height: 1.4;
+}
+
+.dispatch-leaflet-popup .leaflet-popup-tip {
+  background: hsl(var(--card));
 }
