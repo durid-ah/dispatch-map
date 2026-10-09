@@ -1,0 +1,85 @@
+services:
+  # ----------------------------------------------------------------------------
+  # PostgreSQL Database Service
+  # ----------------------------------------------------------------------------
+  db:
+    build:
+      context: ./docker/postgres
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dispatch}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dispatch}
+      POSTGRES_DB: ${POSTGRES_DB:-dispatch_map}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - dispatch_map_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dispatch} -d ${POSTGRES_DB:-dispatch_map}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  # ----------------------------------------------------------------------------
+  # Database Migrations Runner (Runs alembic upgrade head and exits)
+  # ----------------------------------------------------------------------------
+  migrations:
+    build:
+      context: .
+      dockerfile: packages/migrations/Dockerfile
+    environment:
+      DB_URL: postgresql://${POSTGRES_USER:-dispatch}:${POSTGRES_PASSWORD:-dispatch}@db:5432/${POSTGRES_DB:-dispatch_map}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  # ----------------------------------------------------------------------------
+  # FastAPI API & Web SPA Service (Production mode: serves API and React SPA on port 8000)
+  # ----------------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: packages/api/Dockerfile
+      target: production
+    environment:
+      DB_URL: postgresql://${POSTGRES_USER:-dispatch}:${POSTGRES_PASSWORD:-dispatch}@db:5432/${POSTGRES_DB:-dispatch_map}
+      ENV: PROD
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  # ----------------------------------------------------------------------------
+  # Dispatch Consumer Service (Production background worker)
+  # ----------------------------------------------------------------------------
+  consumer:
+    build:
+      context: .
+      dockerfile: packages/dispatch-consumer/Dockerfile
+      target: production
+    environment:
+      DB_URL: postgresql://${POSTGRES_USER:-dispatch}:${POSTGRES_PASSWORD:-dispatch}@db:5432/${POSTGRES_DB:-dispatch_map}
+      ENV: PROD
+      ACTIVE_CALLS_URL: ${ACTIVE_CALLS_URL:-https://apps.richmondgov.com/applications/activecalls/Home/ActiveCalls}
+      USER_AGENT: ${USER_AGENT:-Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0}
+      NOMINATIM_URL: ${NOMINATIM_URL:-http://host.docker.internal:8091/search}
+      GEOCODE_CITY: ${GEOCODE_CITY:-Richmond, VA}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      db:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+volumes:
+  dispatch_map_pgdata:
+    name: dispatch_map_pgdata
