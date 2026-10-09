@@ -148,6 +148,7 @@ version = "0.1.0"
 source = { virtual = "packages/dispatch-consumer" }
 dependencies = [
     { name = "beautifulsoup4" },
+    { name = "db" },
     { name = "httpx" },
     { name = "pandas" },
     { name = "psycopg2-binary" },
@@ -158,6 +159,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.12.0" },
+    { name = "db", editable = "packages/db" },
     { name = "httpx", specifier = ">=0.28.0" },
     { name = "pandas", specifier = ">=3.0.3" },
     { name = "psycopg2-binary", specifier = ">=2.9.12" },
