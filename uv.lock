@@ -491,10 +491,14 @@ version = "0.1.0"
 source = { virtual = "packages/migrations" }
 dependencies = [
     { name = "alembic" },
+    { name = "psycopg2-binary" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "alembic", specifier = ">=1.18.5" }]
+requires-dist = [
+    { name = "alembic", specifier = ">=1.18.5" },
+    { name = "psycopg2-binary", specifier = ">=2.9.12" },
+]
 
 [[package]]
 name = "numpy"

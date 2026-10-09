@@ -21,12 +21,14 @@ Commands:
   api         Run FastAPI in dev mode (packages/api)
   web         Run the Vite frontend (packages/web)
   consumer    Run the dispatch consumer (packages/dispatch-consumer)
+  docker      Run all services in Docker Compose (dev mode)
   help        Show this help message
 
 Examples:
   ./run-dev.sh api
   ./run-dev.sh web
   ./run-dev.sh consumer
+  ./run-dev.sh docker
 EOF
 }
 
@@ -51,6 +53,11 @@ case "$TARGET" in
   consumer)
     log_info "Starting dispatch consumer..."
     exec uv run --directory packages/dispatch-consumer python main.py "$@"
+    ;;
+
+  docker|compose)
+    log_info "Starting Docker Compose development environment..."
+    exec docker compose up "$@"
     ;;
 
   help|-h|--help)
