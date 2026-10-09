@@ -1,14 +1,11 @@
-import os
 from collections.abc import Generator
 from typing import Annotated
 
-from dotenv import load_dotenv
 from fastapi import Depends
 from sqlmodel import Session, create_engine
 
-load_dotenv()
+from config import DB_URL
 
-DB_URL = os.getenv("DB_URL")
 if not DB_URL:
     raise RuntimeError("DB_URL environment variable is required")
 
