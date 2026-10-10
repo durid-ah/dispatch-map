@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "typegen": "openapi-typescript ../api/openapi.json -o ./src/types/api.generated.ts",
+    "typegen:check": "openapi-typescript ../api/openapi.json --check ./src/types/api.generated.ts",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -30,6 +32,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "openapi-typescript": "^7.13.0",
     "oxlint": "^1.81.0",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",

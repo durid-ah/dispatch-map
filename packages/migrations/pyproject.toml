@@ -1,10 +1,15 @@
 [project]
 name = "migrations"
 version = "0.1.0"
-description = "Add your description here"
+description = "Database migrations for dispatch-map"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "alembic>=1.18.5",
+    "db",
     "psycopg2-binary>=2.9.12",
+    "sqlmodel>=0.0.32",
 ]
+
+[tool.uv.sources]
+db = { workspace = true }
