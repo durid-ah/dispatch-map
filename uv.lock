@@ -491,13 +491,17 @@ version = "0.1.0"
 source = { virtual = "packages/migrations" }
 dependencies = [
     { name = "alembic" },
+    { name = "db" },
     { name = "psycopg2-binary" },
+    { name = "sqlmodel" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "alembic", specifier = ">=1.18.5" },
+    { name = "db", editable = "packages/db" },
     { name = "psycopg2-binary", specifier = ">=2.9.12" },
+    { name = "sqlmodel", specifier = ">=0.0.32" },
 ]
 
 [[package]]
