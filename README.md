@@ -114,6 +114,48 @@ uv run --directory packages/migrations alembic upgrade head
 
 ---
 
+## Spec-Driven Development (SDD) Workflow
+
+This project follows **Spec-Driven Development** to prevent contract drift between backend Python services and the frontend React application.
+
+### Adding New Features with SDD (5-Step Lifecycle)
+
+1. **Author the Feature Specification**:
+   Copy the template and define requirements, boundaries, data models, and acceptance criteria:
+   ```bash
+   cp docs/specs/templates/feature_spec_template.md docs/specs/features/your-feature-name.md
+   ```
+
+2. **Define Schema & Database Contracts First**:
+   - Add/update database tables in `packages/db/src/db/models.py`.
+   - Add/update API models and routers in `packages/api/schemas.py` and `packages/api/routers/`.
+   - If database models changed, create an Alembic migration:
+     ```bash
+     uv run --directory packages/migrations alembic revision --autogenerate -m "add feature tables"
+     ```
+
+3. **Synchronize Contracts Automatically (Never Manual Copying)**:
+   Export the OpenAPI specification and regenerate TypeScript types:
+   ```bash
+   ./run-dev.sh spec:types
+   ```
+   This generates strict, compile-time TypeScript interfaces in `packages/web/src/types/api.generated.ts`.
+
+4. **Write Tests Matching Acceptance Criteria**:
+   - Add API endpoint test cases in `packages/api/tests/test_api.py`.
+   - Add model invariants in `packages/db/tests/test_models.py`.
+   - Add consumer parser tests in `packages/dispatch-consumer/tests/test_parser.py` if scraping logic changed.
+
+5. **Implement Code & Verify Contracts**:
+   Implement your frontend components and backend logic. Before committing, run the full verification suite:
+   ```bash
+   ./run-dev.sh spec:verify
+   ```
+
+See [docs/specs/README.md](docs/specs/README.md) for full details, templates, and conventions.
+
+---
+
 ## Repository Structure
 
 ```
