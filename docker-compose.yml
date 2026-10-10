@@ -33,6 +33,7 @@ services:
       DB_URL: postgresql://${POSTGRES_USER:-dispatch}:${POSTGRES_PASSWORD:-dispatch}@db:5432/${POSTGRES_DB:-dispatch_map}
     volumes:
       - ./packages/migrations:/app/packages/migrations
+      - ./packages/db:/app/packages/db
     depends_on:
       db:
         condition: service_healthy

@@ -9,12 +9,14 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
     PYTHONUNBUFFERED=1 \
-    PATH="/app/.venv/bin:$PATH"
+    PATH="/app/.venv/bin:$PATH" \
+    PYTHONPATH="/app/packages/db/src"
 
 WORKDIR /app
 
-# Copy workspace configuration and migration dependencies
+# Copy workspace configuration and dependencies
 COPY pyproject.toml uv.lock ./
+COPY packages/db/ ./packages/db/
 COPY packages/migrations/pyproject.toml ./packages/migrations/
 
 # Install migration dependencies (alembic and database driver)
