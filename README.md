@@ -32,7 +32,7 @@ docker compose up --build
 
 - **Web Frontend**: `http://localhost:5173` (Vite dev server with Hot Module Replacement, proxying API requests to FastAPI)
 - **API & Docs**: `http://localhost:8000/docs` (FastAPI Swagger UI)
-- **Database**: `localhost:5432` (`postgresql://dispatch:dispatch@localhost:5432/dispatch_map`)
+- **Database**: `localhost:5430` (`postgresql://dispatch:dispatch@localhost:5430/dispatch_map`)
 
 Code changes in `packages/web`, `packages/api`, `packages/db`, and `packages/dispatch-consumer` reload automatically inside the containers.
 
