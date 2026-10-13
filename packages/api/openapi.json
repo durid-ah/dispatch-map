@@ -54,6 +54,51 @@
         }
       }
     },
+    "/events/{external_id}/responders": {
+      "get": {
+        "tags": [
+          "events"
+        ],
+        "summary": "Get Event Responders",
+        "operationId": "get_event_responders_events__external_id__responders_get",
+        "parameters": [
+          {
+            "name": "external_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "External Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventRespondersEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/{full_path}": {
       "get": {
         "tags": [
@@ -98,6 +143,27 @@
   },
   "components": {
     "schemas": {
+      "EventRespondersEnvelope": {
+        "properties": {
+          "external_id": {
+            "type": "string",
+            "title": "External Id"
+          },
+          "responders": {
+            "items": {
+              "$ref": "#/components/schemas/ResponderRead"
+            },
+            "type": "array",
+            "title": "Responders",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "external_id"
+        ],
+        "title": "EventRespondersEnvelope"
+      },
       "EventWithCoords": {
         "properties": {
           "id": {
@@ -192,6 +258,67 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "ResponderRead": {
+        "properties": {
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "dispatch_area": {
+            "type": "string",
+            "title": "Dispatch Area"
+          },
+          "agency": {
+            "type": "string",
+            "title": "Agency"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "statuses": {
+            "items": {
+              "$ref": "#/components/schemas/ResponderStatusRead"
+            },
+            "type": "array",
+            "title": "Statuses",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "unit",
+          "dispatch_area",
+          "agency",
+          "created_at"
+        ],
+        "title": "ResponderRead"
+      },
+      "ResponderStatusRead": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "status_order": {
+            "type": "integer",
+            "title": "Status Order"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "status_order",
+          "created_at"
+        ],
+        "title": "ResponderStatusRead"
       },
       "ValidationError": {
         "properties": {

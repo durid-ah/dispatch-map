@@ -195,7 +195,7 @@ export interface components {
 
 ### Verification Commands
 - [x] Backend test suite passes: `uv run python -m unittest discover packages/api/tests`
-- [ ] Contract exported & TypeScript types synchronized: `./run-dev.sh spec:types`
+- [x] Contract exported & TypeScript types synchronized: `./run-dev.sh spec:types`
 - [ ] Web package builds with clean TypeScript check: `npm run build --prefix packages/web`
 - [ ] Full SDD verification pipeline passes: `./run-dev.sh spec:verify`
 
@@ -209,6 +209,6 @@ export interface components {
 - [x] Existing event with responders returns HTTP 200 with responders and their status progression list.
 - [x] No database surrogate IDs (`id`, `responder_id`, `event_id`) are included in responder or status payloads.
 - [x] `current_status` is not present in responder payloads.
-- [ ] `packages/api/openapi.json` includes `paths["/events/{external_id}/responders"]`.
-- [ ] `packages/web/src/types/api.generated.ts` contains the generated types matching the new endpoint contract.
+- [x] `packages/api/openapi.json` includes `paths["/events/{external_id}/responders"]`.
+- [x] `packages/web/src/types/api.generated.ts` contains the generated types matching the new endpoint contract.
 

@@ -21,6 +21,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/events/{external_id}/responders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Event Responders */
+        get: operations["get_event_responders_events__external_id__responders_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/{full_path}": {
         parameters: {
             query?: never;
@@ -45,6 +62,16 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** EventRespondersEnvelope */
+        EventRespondersEnvelope: {
+            /** External Id */
+            external_id: string;
+            /**
+             * Responders
+             * @default []
+             */
+            responders: components["schemas"]["ResponderRead"][];
+        };
         /** EventWithCoords */
         EventWithCoords: {
             /** Id */
@@ -81,6 +108,37 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** ResponderRead */
+        ResponderRead: {
+            /** Unit */
+            unit: string;
+            /** Dispatch Area */
+            dispatch_area: string;
+            /** Agency */
+            agency: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Statuses
+             * @default []
+             */
+            statuses: components["schemas"]["ResponderStatusRead"][];
+        };
+        /** ResponderStatusRead */
+        ResponderStatusRead: {
+            /** Status */
+            status: string;
+            /** Status Order */
+            status_order: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /** ValidationError */
         ValidationError: {
@@ -123,6 +181,44 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["EventWithCoords"][];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_event_responders_events__external_id__responders_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                external_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventRespondersEnvelope"];
+                };
+            };
+            /** @description Event not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
