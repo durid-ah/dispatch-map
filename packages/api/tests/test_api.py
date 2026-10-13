@@ -60,16 +60,6 @@ class ApiEndpointTests(unittest.TestCase):
         app.dependency_overrides[get_session] = override_get_session
         cls.client = TestClient(app)
 
-    def test_item_detail(self):
-        res = self.client.get("/items/1?q=test")
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.json(), {"item_id": 1, "q": "test"})
-
-    def test_item_stream(self):
-        res = self.client.get("/items/stream")
-        self.assertEqual(res.status_code, 200)
-        self.assertIn("text/event-stream", res.headers["content-type"])
-
     def test_events_endpoint(self):
         res = self.client.get("/events?hours=24")
         self.assertEqual(res.status_code, 200)
@@ -79,11 +69,6 @@ class ApiEndpointTests(unittest.TestCase):
         self.assertEqual(data[0]["call_type"], "MEDICAL EMERGENCY")
         self.assertEqual(data[0]["latitude"], 37.54)
         self.assertEqual(data[0]["longitude"], -77.43)
-
-    def test_static_stream_file(self):
-        res = self.client.get("/static/stream.html")
-        self.assertEqual(res.status_code, 200)
-        self.assertIn("<!DOCTYPE html>", res.text)
 
 
 if __name__ == "__main__":

@@ -13,5 +13,5 @@ npm run lint --prefix packages/web
 
 ## Integration with FastAPI
 
-- **Development:** Vite proxies `/items` to `http://127.0.0.1:8000` (see `vite.config.ts`).
+- **Development:** Vite proxies `/events` to `http://127.0.0.1:8000` (see `vite.config.ts`).
 - **Production:** `npm run build` writes to `packages/api/static/app`, which FastAPI serves with an SPA fallback for client-side routes.

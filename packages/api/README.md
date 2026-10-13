@@ -14,6 +14,5 @@ uv run fastapi run packages/api/main.py
 ```
 
 ## Static files
-
-- `static/stream.html` — legacy SSE demo page at `/static/stream.html`
+ 
 - `static/app/` — generated Vite build output (gitignored); served at `/` with SPA fallback

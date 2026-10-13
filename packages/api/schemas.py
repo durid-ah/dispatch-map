@@ -1,12 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel
 from sqlmodel import SQLModel
-
-
-class Item(BaseModel):
-    name: str
-    description: str | None
 
 
 class EventWithCoords(SQLModel):
