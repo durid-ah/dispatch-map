@@ -42,7 +42,7 @@ export function AppHeader({
           </span>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold tracking-tight text-foreground leading-tight">
-              Richmond 911 Dispatch
+              911 Dispatch
             </h1>
             <span className="text-[11px] font-medium text-muted-foreground leading-tight">
               Active Emergency CAD Calls

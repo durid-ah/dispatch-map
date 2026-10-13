@@ -119,7 +119,6 @@ export function EventCard({
       </div>
 
       <div className="flex items-center justify-between pt-1 border-t border-border/50 text-[10px]">
-        <span className="font-mono text-muted-foreground">#{event.id}</span>
         <Badge
           variant="outline"
           className={cn(
