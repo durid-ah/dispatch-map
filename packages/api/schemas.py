@@ -14,3 +14,23 @@ class EventWithCoords(SQLModel):
     longitude: float | None
     created_at: datetime
     updated_at: datetime
+
+
+class ResponderStatusRead(SQLModel):
+    status: str
+    status_order: int
+    created_at: datetime
+
+
+class ResponderRead(SQLModel):
+    unit: str
+    dispatch_area: str
+    agency: str
+    created_at: datetime
+    statuses: list[ResponderStatusRead] = []
+
+
+class EventRespondersEnvelope(SQLModel):
+    external_id: str
+    responders: list[ResponderRead] = []
+

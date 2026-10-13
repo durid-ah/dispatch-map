@@ -194,20 +194,21 @@ export interface components {
 ## 5. Executable Acceptance Criteria
 
 ### Verification Commands
-- [ ] Backend test suite passes: `uv run python -m unittest discover packages/api/tests`
+- [x] Backend test suite passes: `uv run python -m unittest discover packages/api/tests`
 - [ ] Contract exported & TypeScript types synchronized: `./run-dev.sh spec:types`
 - [ ] Web package builds with clean TypeScript check: `npm run build --prefix packages/web`
 - [ ] Full SDD verification pipeline passes: `./run-dev.sh spec:verify`
 
 ### Behavior Checklist
-- [ ] `packages/api/schemas.py` defines `ResponderStatusRead`, `ResponderRead`, and `EventRespondersEnvelope`.
-- [ ] `packages/api/services/event_service.py` provides `get_responders_by_external_id(session, external_id)`.
-- [ ] `packages/api/routers/events.py` registers `GET /events/{external_id}/responders` using handler function `get_event_responders`.
-- [ ] Path parameter uses `external_id` (string), not integer database surrogate ID.
-- [ ] Non-existent `external_id` returns HTTP 404 with `{"detail": "Event not found"}`.
-- [ ] Existing event with no responders returns HTTP 200 with empty `responders` array in envelope.
-- [ ] Existing event with responders returns HTTP 200 with responders and their status progression list.
-- [ ] No database surrogate IDs (`id`, `responder_id`, `event_id`) are included in responder or status payloads.
-- [ ] `current_status` is not present in responder payloads.
+- [x] `packages/api/schemas.py` defines `ResponderStatusRead`, `ResponderRead`, and `EventRespondersEnvelope`.
+- [x] `packages/api/services/event_service.py` provides `get_responders_by_external_id(session, external_id)`.
+- [x] `packages/api/routers/events.py` registers `GET /events/{external_id}/responders` using handler function `get_event_responders`.
+- [x] Path parameter uses `external_id` (string), not integer database surrogate ID.
+- [x] Non-existent `external_id` returns HTTP 404 with `{"detail": "Event not found"}`.
+- [x] Existing event with no responders returns HTTP 200 with empty `responders` array in envelope.
+- [x] Existing event with responders returns HTTP 200 with responders and their status progression list.
+- [x] No database surrogate IDs (`id`, `responder_id`, `event_id`) are included in responder or status payloads.
+- [x] `current_status` is not present in responder payloads.
 - [ ] `packages/api/openapi.json` includes `paths["/events/{external_id}/responders"]`.
 - [ ] `packages/web/src/types/api.generated.ts` contains the generated types matching the new endpoint contract.
+
