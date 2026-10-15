@@ -1,6 +1,6 @@
 # Feature Specification: Event Responders & Status History Endpoint
 
-- **Status**: Approved
+- **Status**: Implemented
 - **Author**: AI Assistant & Pair
 - **Date**: 2026-10-13
 - **Related Issues / PRs**: N/A
@@ -196,8 +196,8 @@ export interface components {
 ### Verification Commands
 - [x] Backend test suite passes: `uv run python -m unittest discover packages/api/tests`
 - [x] Contract exported & TypeScript types synchronized: `./run-dev.sh spec:types`
-- [ ] Web package builds with clean TypeScript check: `npm run build --prefix packages/web`
-- [ ] Full SDD verification pipeline passes: `./run-dev.sh spec:verify`
+- [x] Web package builds with clean TypeScript check: `npm run build --prefix packages/web`
+- [x] Full SDD verification pipeline passes: `./run-dev.sh spec:verify`
 
 ### Behavior Checklist
 - [x] `packages/api/schemas.py` defines `ResponderStatusRead`, `ResponderRead`, and `EventRespondersEnvelope`.
