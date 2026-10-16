@@ -4,12 +4,16 @@ import { Button } from '@/components/ui/button.tsx'
 import { Input } from '@/components/ui/input.tsx'
 import { ScrollArea } from '@/components/ui/scroll-area.tsx'
 import { EventCard } from '@/features/events/components/event-card.tsx'
+import { EventDetailCard } from '@/features/events/components/event-detail-card.tsx'
 import type { EventWithCoords } from '@/features/events/types/index.ts'
 
 export interface EventListProps {
   events?: EventWithCoords[]
   selectedEventId?: number | null
+  selectedEvent?: EventWithCoords | null
   onSelectEvent?: (event: EventWithCoords) => void
+  onDeselectEvent?: () => void
+  onCenterOnMap?: (event: EventWithCoords) => void
   isLoading?: boolean
   isError?: boolean
   error?: Error | null
@@ -19,13 +23,24 @@ export interface EventListProps {
 export function EventList({
   events = [],
   selectedEventId = null,
+  selectedEvent = null,
   onSelectEvent,
+  onDeselectEvent,
+  onCenterOnMap,
   isLoading = false,
   isError = false,
   error = null,
   onRetry,
 }: EventListProps) {
   const [searchQuery, setSearchQuery] = useState('')
+
+  const activeEvent = useMemo(() => {
+    if (selectedEvent) return selectedEvent
+    if (selectedEventId) {
+      return events.find((e) => e.id === selectedEventId) || null
+    }
+    return null
+  }, [events, selectedEvent, selectedEventId])
 
   const filteredEvents = useMemo(() => {
     if (!searchQuery.trim()) {
@@ -38,6 +53,16 @@ export function EventList({
         ev.location.toLowerCase().includes(query),
     )
   }, [events, searchQuery])
+
+  if (activeEvent) {
+    return (
+      <EventDetailCard
+        event={activeEvent}
+        onBack={onDeselectEvent ?? (() => {})}
+        onCenterOnMap={onCenterOnMap}
+      />
+    )
+  }
 
   return (
     <div className="w-full md:w-[390px] md:min-w-[320px] md:max-w-[440px] bg-card/40 border-r border-border flex flex-col h-full shrink-0 z-10">

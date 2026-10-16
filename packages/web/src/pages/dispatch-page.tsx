@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AppHeader } from '@/components/layout/app-header.tsx'
 import { AppLayout } from '@/components/layout/app-layout.tsx'
 import { useEventsQuery } from '@/features/events/api/use-events-query.ts'
@@ -19,9 +19,28 @@ export function DispatchPage() {
     isFetching,
   } = useEventsQuery({ hours })
 
+  const selectedEvent = useMemo(() => {
+    if (!selectedEventId) return null
+    return events?.find((e) => e.id === selectedEventId) || null
+  }, [events, selectedEventId])
+
   const handleSelectEvent = (event: EventWithCoords) => {
     setSelectedEventId(event.id)
   }
+
+  const handleDeselectEvent = () => {
+    setSelectedEventId(null)
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedEventId !== null) {
+        setSelectedEventId(null)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedEventId])
 
   const handleHoursChange = (newHours: number) => {
     setHours(newHours)
@@ -48,7 +67,10 @@ export function DispatchPage() {
         <EventList
           events={events}
           selectedEventId={selectedEventId}
+          selectedEvent={selectedEvent}
           onSelectEvent={handleSelectEvent}
+          onDeselectEvent={handleDeselectEvent}
+          onCenterOnMap={handleSelectEvent}
           isLoading={isLoading}
           isError={isError}
           error={error}
