@@ -48,9 +48,11 @@ export function EventCard({
       <div className="flex items-center justify-between gap-2">
         <Badge
           variant={categoryVariant}
-          className="max-w-[210px] truncate text-[11px] font-semibold tracking-wide"
+          className="max-w-[210px] min-w-0 text-[11px] font-semibold tracking-wide"
         >
-          {event.call_type}
+          <span className="truncate" title={event.call_type}>
+            {event.call_type}
+          </span>
         </Badge>
         <span
           className="text-[11px] text-muted-foreground whitespace-nowrap"
