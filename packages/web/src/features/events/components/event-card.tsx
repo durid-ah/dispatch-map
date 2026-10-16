@@ -2,64 +2,13 @@ import { MapPin } from 'lucide-react'
 import { Badge } from '@/components/ui/badge.tsx'
 import { Card } from '@/components/ui/card.tsx'
 import type { EventWithCoords } from '@/features/events/types/index.ts'
+import { formatRelativeTime, getCallCategoryVariant } from '@/lib/formatters.ts'
 import { cn } from '@/lib/utils.ts'
 
 export interface EventCardProps {
   event: EventWithCoords
   isSelected?: boolean
   onSelect?: (event: EventWithCoords) => void
-}
-
-function formatRelativeTime(dateString: string): string {
-  try {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-
-    if (diffSeconds < 0) {
-      return 'Just now'
-    }
-    if (diffSeconds < 60) {
-      return `${diffSeconds}s ago`
-    }
-    const diffMinutes = Math.floor(diffSeconds / 60)
-    if (diffMinutes < 60) {
-      return `${diffMinutes}m ago`
-    }
-    const diffHours = Math.floor(diffMinutes / 60)
-    if (diffHours < 24) {
-      return `${diffHours}h ago`
-    }
-    const diffDays = Math.floor(diffHours / 24)
-    return `${diffDays}d ago`
-  } catch {
-    return dateString
-  }
-}
-
-function getCallCategoryVariant(
-  callType: string,
-): 'fire' | 'medical' | 'traffic' | 'police' {
-  const lower = callType.toLowerCase()
-  if (lower.includes('fire') || lower.includes('alarm') || lower.includes('smoke')) {
-    return 'fire'
-  }
-  if (
-    lower.includes('med') ||
-    lower.includes('ems') ||
-    lower.includes('cardiac') ||
-    lower.includes('injury')
-  ) {
-    return 'medical'
-  }
-  if (
-    lower.includes('traffic') ||
-    lower.includes('accident') ||
-    lower.includes('crash')
-  ) {
-    return 'traffic'
-  }
-  return 'police'
 }
 
 export function EventCard({
