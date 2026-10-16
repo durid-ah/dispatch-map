@@ -1,10 +1,7 @@
-import { useState, useCallback } from 'react'
 import {
   AlertTriangle,
   ArrowLeft,
-  Check,
   Clock,
-  Copy,
   Crosshair,
   Loader2,
   MapPin,
@@ -36,7 +33,6 @@ export function EventDetailCard({
   onBack,
   onCenterOnMap,
 }: EventDetailCardProps) {
-  const [copied, setCopied] = useState(false)
   const hasCoords = event.latitude !== null && event.longitude !== null
   const categoryVariant = getCallCategoryVariant(event.call_type)
   const relativeTime = formatRelativeTime(event.time_received)
@@ -51,18 +47,6 @@ export function EventDetailCard({
   } = useEventRespondersQuery(event.external_id)
 
   const responders = respondersData?.responders ?? []
-
-  const handleCopyId = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(event.external_id)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch {
-      // Fallback if clipboard API is restricted
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    }
-  }, [event.external_id])
 
   return (
     <div className="w-full md:w-[390px] md:min-w-[320px] md:max-w-[440px] bg-card/40 border-r border-border flex flex-col h-full shrink-0 z-10">
@@ -146,34 +130,6 @@ export function EventDetailCard({
                   <span>Locate</span>
                 </Button>
               )}
-            </div>
-
-            {/* External ID with Copy */}
-            <div className="pt-2 border-t border-border/40 flex items-center justify-between gap-2 text-[10px] text-muted-foreground">
-              <span className="font-mono truncate max-w-[200px]" title={event.external_id}>
-                ID: {event.external_id.slice(0, 12)}…{event.external_id.slice(-6)}
-              </span>
-
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleCopyId}
-                className="h-6 px-2 text-[10px] font-medium gap-1 text-muted-foreground hover:text-foreground"
-                aria-label="Copy incident ID"
-              >
-                {copied ? (
-                  <>
-                    <Check className="h-3 w-3 text-emerald-400" />
-                    <span className="text-emerald-400 font-semibold">Copied</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-3 w-3" />
-                    <span>Copy ID</span>
-                  </>
-                )}
-              </Button>
             </div>
           </Card>
 
