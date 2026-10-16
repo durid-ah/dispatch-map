@@ -1,6 +1,6 @@
 # Feature Specification: Event Details & Responders Display in Frontend
 
-- **Status**: Draft | Under Review
+- **Status**: Implemented
 - **Author**: AI Assistant & Pair
 - **Date**: 2026-10-14
 - **Related Issues / PRs**: N/A
@@ -166,23 +166,23 @@ flowchart LR
 ## 6. Executable Acceptance Criteria
 
 ### Verification Commands
-- [ ] Backend tests pass: `uv run python -m unittest discover packages/api/tests`
-- [ ] Contract synchronization passes: `npm run typegen:check --prefix packages/web`
-- [ ] Frontend builds cleanly: `npm run build --prefix packages/web`
-- [ ] Linter checks cleanly: `npm run lint --prefix packages/web`
-- [ ] Full SDD pipeline passes: `./run-dev.sh spec:verify`
+- [x] Backend tests pass: `uv run python -m unittest discover packages/api/tests`
+- [x] Contract synchronization passes: `npm run typegen:check --prefix packages/web`
+- [x] Frontend builds cleanly: `npm run build --prefix packages/web`
+- [x] Linter checks cleanly: `npm run lint --prefix packages/web`
+- [x] Full SDD pipeline passes: `./run-dev.sh spec:verify`
 
 ### Behavior Checklist
-- [ ] Clicking a pin on the map switches the sidebar to the large Event Detail Card.
-- [ ] Clicking an item in the event list switches the sidebar to the large Event Detail Card.
-- [ ] Clicking "← Back to all calls" returns to the event list.
-- [ ] No "✕" close button is present; back button alone controls navigation.
-- [ ] Pressing the `Escape` key returns to the event list.
-- [ ] Search query in the event list is preserved after viewing an event and navigating back.
-- [ ] Event Detail Card displays call type, relative & exact timestamps, location, and coordinates.
-- [ ] External ID has a working copy button with user feedback.
-- [ ] Responders are retrieved from `GET /events/{external_id}/responders`.
-- [ ] Responding units display their unit name, agency, dispatch area, and current status.
-- [ ] Status events display as a chronological vertical timeline stepper with timestamps and elapsed duration.
-- [ ] Events with 0 responders render an informative empty state.
-- [ ] Network errors while fetching responders render a retryable error message.
+- [x] Clicking a pin on the map switches the sidebar to the large Event Detail Card.
+- [x] Clicking an item in the event list switches the sidebar to the large Event Detail Card.
+- [x] Clicking "← Back to all calls" returns to the event list.
+- [x] No "✕" close button is present; back button alone controls navigation.
+- [x] Pressing the `Escape` key returns to the event list.
+- [x] Search query in the event list is preserved after viewing an event and navigating back.
+- [x] Event Detail Card displays call type, relative & exact timestamps, location, and coordinates.
+- [x] External ID has a working copy button with user feedback.
+- [x] Responders are retrieved from `GET /events/{external_id}/responders`.
+- [x] Responding units display their unit name, agency, dispatch area, and current status.
+- [x] Status events display as a chronological vertical timeline stepper with timestamps and elapsed duration.
+- [x] Events with 0 responders render an informative empty state.
+- [x] Network errors while fetching responders render a retryable error message.
