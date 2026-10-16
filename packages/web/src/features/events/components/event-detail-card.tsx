@@ -2,7 +2,6 @@ import {
   AlertTriangle,
   ArrowLeft,
   Clock,
-  Crosshair,
   Loader2,
   MapPin,
   Shield,
@@ -31,7 +30,6 @@ export interface EventDetailCardProps {
 export function EventDetailCard({
   event,
   onBack,
-  onCenterOnMap,
 }: EventDetailCardProps) {
   const hasCoords = event.latitude !== null && event.longitude !== null
   const categoryVariant = getCallCategoryVariant(event.call_type)
@@ -117,19 +115,6 @@ export function EventDetailCard({
                   ? `📍 ${event.latitude?.toFixed(4)}, ${event.longitude?.toFixed(4)}`
                   : '⏳ Pending Geocoding'}
               </Badge>
-
-              {hasCoords && onCenterOnMap && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onCenterOnMap(event)}
-                  className="h-6 text-[11px] px-2 text-primary hover:text-primary gap-1"
-                >
-                  <Crosshair className="h-3 w-3" />
-                  <span>Locate</span>
-                </Button>
-              )}
             </div>
           </Card>
 
