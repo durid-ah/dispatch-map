@@ -116,18 +116,22 @@ uv run --directory packages/migrations alembic upgrade head
 
 ## Spec-Driven Development (SDD) Workflow
 
-This project follows **Spec-Driven Development** to prevent contract drift between backend Python services and the frontend React application.
+This project follows **Living Spec-Driven Development** to prevent drift between specifications, backend Python services, and the frontend React application.
 
-### Adding New Features with SDD (5-Step Lifecycle)
+Each active vertical capability owns one present-tense file under `docs/specs/features/<slug>.md`, indexed in [docs/specs/README.md](docs/specs/README.md), while shared topology, the PostgreSQL/SQLModel ERD, contract sync, and SPA hosting live in [docs/specs/architecture.md](docs/specs/architecture.md).
 
-1. **Author the Feature Specification**:
-   Copy the template and define requirements, boundaries, data models, and acceptance criteria:
-   ```bash
-   cp docs/specs/templates/feature_spec_template.md docs/specs/features/your-feature-name.md
-   ```
+### Adding, Modifying, or Retiring Features
+
+1. **Locate or Create the Living Feature Spec**:
+   - **Modifying a feature**: Find its spec in [docs/specs/README.md](docs/specs/README.md) (or by matching `source_files`) and update `docs/specs/features/<slug>.md` in place in the same branch/PR.
+   - **Adding a feature**: Copy the template to a kebab-case file and register it in `docs/specs/README.md`:
+     ```bash
+     cp docs/specs/templates/feature_spec_template.md docs/specs/features/your-feature-name.md
+     ```
+   - **Retiring a feature**: Delete `docs/specs/features/<slug>.md` and remove its row from `docs/specs/README.md` (git history tracks removals).
 
 2. **Define Schema & Database Contracts First**:
-   - Add/update database tables in `packages/db/src/db/models.py`.
+   - Add/update database tables in `packages/db/src/db/models.py` and shared docs in `docs/specs/architecture.md`.
    - Add/update API models and routers in `packages/api/schemas.py` and `packages/api/routers/`.
    - If database models changed, create an Alembic migration:
      ```bash
@@ -141,18 +145,19 @@ This project follows **Spec-Driven Development** to prevent contract drift betwe
    ```
    This generates strict, compile-time TypeScript interfaces in `packages/web/src/types/api.generated.ts`.
 
-4. **Write Tests Matching Acceptance Criteria**:
+4. **Write Tests Matching Spec Requirements**:
    - Add API endpoint test cases in `packages/api/tests/test_api.py`.
    - Add model invariants in `packages/db/tests/test_models.py`.
-   - Add consumer parser tests in `packages/dispatch-consumer/tests/test_parser.py` if scraping logic changed.
+   - Add consumer parser tests in `packages/dispatch-consumer/tests/test_parser.py` if scraping/parsing logic changed.
 
-5. **Implement Code & Verify Contracts**:
-   Implement your frontend components and backend logic. Before committing, run the full verification suite:
+5. **Validate Specs, Code & Contracts Before Committing**:
+   Run the standalone living-spec validator or the full verification suite:
    ```bash
+   ./run-dev.sh spec:check
    ./run-dev.sh spec:verify
    ```
 
-See [docs/specs/README.md](docs/specs/README.md) for full details, templates, and conventions.
+See [docs/specs/README.md](docs/specs/README.md) for the Feature Catalog, templates, and conventions.
 
 ---
 
@@ -161,12 +166,16 @@ See [docs/specs/README.md](docs/specs/README.md) for full details, templates, an
 ```
 ├── docker/
 │   └── postgres/               # PostgreSQL Dockerfile and initialization SQL
+├── docs/
+│   └── specs/                  # Living feature specifications, catalog, and architecture.md
 ├── packages/
 │   ├── api/                    # FastAPI backend & production SPA host
 │   ├── db/                     # Shared SQLModel database models package
 │   ├── dispatch-consumer/      # Active calls scraper & geocoder worker
 │   ├── migrations/             # Alembic database migrations
 │   └── web/                    # React 19 + Vite frontend
+├── scripts/
+│   └── check_specs.py          # Living specification structure & link validator
 ├── .dockerignore               # Optimized Docker build context filter
 ├── .env.example                # Example environment variables
 ├── docker-compose.yml          # Local development Compose orchestration

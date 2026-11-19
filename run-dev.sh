@@ -25,15 +25,17 @@ Development Commands:
   docker        Run all services in Docker Compose (dev mode)
 
 Spec-Driven Development (SDD) Commands:
+  spec:check    Validate living spec structure, catalog sync, and source paths
   spec:export   Export OpenAPI schema from FastAPI offline
   spec:types    Export OpenAPI schema and regenerate frontend TypeScript types
-  spec:verify   Run the full contract verification pipeline (tests, typegen, build, lint)
+  spec:verify   Run the full verification pipeline (specs, tests, typegen, build, lint)
 
 Help:
   help          Show this help message
 
 Examples:
   ./run-dev.sh api
+  ./run-dev.sh spec:check
   ./run-dev.sh spec:types
   ./run-dev.sh spec:verify
 EOF
@@ -67,6 +69,12 @@ case "$TARGET" in
     exec docker compose up "$@"
     ;;
 
+  spec:check)
+    log_info "Validating living specifications..."
+    uv run python scripts/check_specs.py
+    log_success "Living specifications validated successfully!"
+    ;;
+
   spec:export)
     log_info "Exporting FastAPI OpenAPI JSON schema..."
     uv run python packages/api/export_openapi.py
@@ -82,16 +90,18 @@ case "$TARGET" in
     ;;
 
   spec:verify)
-    log_info "1/5: Running Python API tests..."
+    log_info "1/6: Validating living specifications..."
+    uv run python scripts/check_specs.py
+    log_info "2/6: Running Python API tests..."
     uv run python -m unittest discover packages/api/tests
-    log_info "2/5: Running DB model contract tests..."
+    log_info "3/6: Running DB model contract tests..."
     uv run python -m unittest discover packages/db/tests
-    log_info "3/5: Running Consumer parser fixture tests..."
+    log_info "4/6: Running Consumer parser fixture tests..."
     uv run python -m unittest discover packages/dispatch-consumer/tests
-    log_info "4/5: Checking OpenAPI schema & TypeScript contract sync..."
+    log_info "5/6: Checking OpenAPI schema & TypeScript contract sync..."
     uv run python packages/api/export_openapi.py
     npm run typegen:check --prefix packages/web
-    log_info "5/5: Running frontend build & linter..."
+    log_info "6/6: Running frontend build & linter..."
     npm run build --prefix packages/web
     npm run lint --prefix packages/web
     echo ""

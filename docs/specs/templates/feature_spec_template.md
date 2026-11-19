@@ -1,83 +1,51 @@
-# Feature Specification: [Feature Name]
-
-- **Status**: Draft | Under Review | Approved | Implemented
-- **Author**: [Author / Pair]
-- **Date**: [YYYY-MM-DD]
-- **Related Issues / PRs**: [Links]
-
+---
+feature: <kebab-case-slug>
+title: <Human-Readable Feature Title>
+status: active # active | experimental | deprecated
+packages:
+  - packages/api
+  - packages/web
+source_files:
+  - packages/api/routers/<router>.py
+  - packages/web/src/features/<feature>/components/<component>.tsx
+tests:
+  - packages/api/tests/<test_file>.py
 ---
 
-## 1. Summary & Problem Statement
+# <Human-Readable Feature Title>
 
-### Problem
-[Describe the problem or opportunity. What is broken, missing, or inefficient today?]
+<!--
+  Living Specification Guidelines:
+  - Write strictly in the present tense describing how the feature works today.
+  - Do not include historical "Problem / Proposed Solution" RFC framing or one-off implementation phase checklists.
+  - Keep `source_files` and `tests` exact (individual repo-relative paths, no globs or brace expansions).
+  - Update this file in place in the same branch/PR whenever the feature changes.
+-->
 
-### Proposed Solution
-[High-level overview of the feature from the user or developer perspective.]
+## 1. Overview
 
-### User Stories / Use Cases
-- **As a** [user/dispatcher/viewer]
-- **I want to** [action]
-- **So that** [benefit / outcome]
+[Summarize what this capability does today, who interacts with it, and how it fits into Dispatch Map.]
 
----
+## 2. Requirements & Behavior
 
-## 2. Scope Boundaries
+[Document the concrete, testable rules, user workflows, polling/caching intervals, sorting/filtering behavior, and UI states currently implemented.]
 
-### In Scope
-- [Deliverable 1]
-- [Deliverable 2]
+- [Behavior or invariant 1]
+- [Behavior or invariant 2]
 
-### Out of Scope (Deferred)
-- [Explicitly excluded item 1]
-- [Explicitly excluded item 2]
+## 3. Interfaces & Contracts
 
----
+- **API Endpoints & Schemas**: [Routes, query/path parameters, response codes, and Pydantic/SQLModel schema names in `packages/api/schemas.py` and `packages/api/openapi.json`.]
+- **Database & Domain Models**: [Tables, columns, and invariants touched; reference the canonical schema in [architecture.md](../architecture.md).]
+- **Frontend Contracts & Components**: [Derived types in `packages/web/src/types/api.generated.ts`, TanStack Query keys/hooks, and UI components.]
 
-## 3. Data Models & Interface Contracts
+## 4. Edge Cases & Failure Modes
 
-### 3.1 Database Schema (SQLModel / PostgreSQL)
-```python
-# Model additions or diffs in packages/db/src/db/models.py
-```
-
-### 3.2 API Endpoint & Schemas (FastAPI / OpenAPI)
-- **Endpoint**: `GET /events` | `POST /...`
-- **Request Parameters / Body**:
-```python
-# Pydantic schema in packages/api/schemas.py
-```
-- **Response Schema**:
-```python
-# Expected response structure
-```
-
-### 3.3 Frontend Contracts & Types (TypeScript)
-```typescript
-// Derived from packages/web/src/types/api.generated.ts
-```
-
----
-
-## 4. Edge Cases, Failure Modes & Resilience
-
-| Scenario | System Behavior | Expected UX / Feedback |
+| Scenario | System Behavior | Expected Outcome / UX |
 |---|---|---|
-| Network failure / API offline | TanStack Query retry policy triggers | Error state with manual retry button |
-| Empty dataset | Returns empty array `[]` | Empty state with friendly prompt |
-| Invalid coordinate data | Geocoder returns `None` | Rendered with missing-coords badge |
+| [Failure mode or boundary input] | [Backend/consumer handling] | [Returned status, fallback, or UI feedback] |
 
----
+## 5. Verification
 
-## 5. Executable Acceptance Criteria
-
-### Verification Commands
-- [ ] Backend tests pass: `uv run python -m unittest discover packages/api/tests`
-- [ ] Contract types generated: `./run-dev.sh spec:types`
-- [ ] Web app compiles: `npm run build --prefix packages/web`
-- [ ] Full pipeline verified: `./run-dev.sh spec:verify`
-
-### Behavior Checklist
-- [ ] Criterion 1: [Specific, testable behavior]
-- [ ] Criterion 2: [Specific, testable behavior]
-- [ ] Criterion 3: [Specific, testable behavior]
+- **Automated Tests**: [Exact test files (`tests` frontmatter) and commands (e.g., `./run-dev.sh spec:verify`).]
+- **Manual Checks**: [Key interactive or visual verification steps, if applicable.]
