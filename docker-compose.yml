@@ -108,6 +108,22 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
 
+  # ----------------------------------------------------------------------------
+  # Radio Transcriber (Rust local-file audio ingestion)
+  # ----------------------------------------------------------------------------
+  radio-transcriber:
+    build:
+      context: .
+      dockerfile: performance/radio-transcriber/Dockerfile
+    environment:
+      INGEST_MODE: ${INGEST_MODE:-file}
+      AUDIO_FILE_PATH: ${AUDIO_FILE_PATH:-samples/sample_dispatch.mp3}
+      SIMULATE_REALTIME: ${SIMULATE_REALTIME:-true}
+      RUST_LOG: ${RUST_LOG:-info}
+    volumes:
+      - ./performance/radio-transcriber/samples:/app/samples:ro
+    restart: unless-stopped
+
 volumes:
   dispatch_map_pgdata:
     name: dispatch_map_pgdata

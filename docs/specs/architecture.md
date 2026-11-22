@@ -15,6 +15,8 @@ flowchart LR
     DB -->|"SQLModel queries"| API["packages/api (FastAPI)"]
     API -->|"GET /events, GET /events/{external_id}/responders"| Web["packages/web (React 19 + Leaflet)"]
     API -.->|"Production static SPA fallback"| Web
+    Samples["Local audio samples (/app/samples)"] -->|"read-only mount"| Transcriber["performance/radio-transcriber (Rust)"]
+    Transcriber -->|"child process"| FFmpeg["FFmpeg"]
 ```
 
 ### Workspace Packages
@@ -26,7 +28,7 @@ flowchart LR
 | `packages/dispatch-consumer` | Background worker that polls Richmond active calls, groups events/responders, geocodes locations, and persists updates | `httpx`, `beautifulsoup4`, SQLModel |
 | `packages/api` | REST API server and production single-port SPA static host | FastAPI, SQLModel, Uvicorn |
 | `packages/web` | Interactive emergency dispatch map and call/responder inspector | React 19, TypeScript, Vite, Tailwind CSS v4, Radix UI, TanStack Query, Leaflet |
-| `performance/` | Rust Cargo workspace scaffold (currently empty `[workspace]` manifest placeholder) | Cargo |
+| `performance/` | Rust Cargo workspace (`resolver = "3"`) whose single member is `radio-transcriber`, a local-file audio ingestion service that runs with FFmpeg (see [radio-transcriber.md](features/radio-transcriber.md)) | Rust, Tokio, tracing, FFmpeg |
 
 ---
 
