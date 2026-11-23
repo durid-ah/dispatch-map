@@ -22,6 +22,7 @@ Development Commands:
   api           Run FastAPI in dev mode (packages/api)
   web           Run the Vite frontend (packages/web)
   consumer      Run the dispatch consumer (packages/dispatch-consumer)
+  transcriber   Run the Rust radio transcriber (performance/radio-transcriber)
   docker        Run all services in Docker Compose (dev mode)
 
 Spec-Driven Development (SDD) Commands:
@@ -62,6 +63,12 @@ case "$TARGET" in
   consumer)
     log_info "Starting dispatch consumer..."
     exec uv run --directory packages/dispatch-consumer python main.py "$@"
+    ;;
+
+  transcriber|radio-transcriber)
+    log_info "Starting radio-transcriber (Rust)..."
+    cd performance/radio-transcriber
+    exec cargo run -- "$@"
     ;;
 
   docker|compose)

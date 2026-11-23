@@ -23,6 +23,8 @@ dist/
 build/
 *.egg-info/
 packages/api/static/app/
+performance/target/
+performance/radio-transcriber/samples/
 
 # Environment files and logs (mount or inject via docker compose instead)
 .env

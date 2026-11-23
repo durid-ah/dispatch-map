@@ -46,3 +46,9 @@ test_data/
 .env
 node_modules/
 packages/api/static/app/
+
+# Rust build output & local audio samples
+performance/target/
+performance/radio-transcriber/samples/*.mp3
+performance/radio-transcriber/samples/*.wav
+performance/radio-transcriber/samples/*.m4a

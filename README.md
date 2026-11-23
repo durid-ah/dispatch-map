@@ -1,6 +1,6 @@
 # dispatch-map
 
-Monorepo containing a FastAPI backend (`packages/api`), React frontend (`packages/web`), background scraper (`packages/dispatch-consumer`), shared database models (`packages/db`), and database migrations (`packages/migrations`).
+Monorepo containing a FastAPI backend (`packages/api`), React frontend (`packages/web`), background scraper (`packages/dispatch-consumer`), shared database models (`packages/db`), database migrations (`packages/migrations`), and a Rust local-audio ingestion service (`performance/radio-transcriber`).
 
 ---
 
@@ -68,6 +68,9 @@ docker build -f packages/migrations/Dockerfile -t dispatch-map-migrations:latest
 
 # Web Frontend (Vite Dev Server):
 docker build -f packages/web/Dockerfile -t dispatch-map-web:dev packages/web
+
+# Radio Transcriber (Rust + FFmpeg):
+docker build -f performance/radio-transcriber/Dockerfile -t dispatch-map-radio-transcriber:latest .
 ```
 
 ---
@@ -93,6 +96,9 @@ You can also run services individually on your host machine.
 
 # Terminal 3 — Consumer (Scraper worker)
 ./run-dev.sh consumer
+
+# Terminal 4 — Radio Transcriber (Rust; requires cargo + ffmpeg on PATH)
+./run-dev.sh transcriber
 ```
 
 Or run directly:
@@ -174,6 +180,9 @@ See [docs/specs/README.md](docs/specs/README.md) for the Feature Catalog, templa
 │   ├── dispatch-consumer/      # Active calls scraper & geocoder worker
 │   ├── migrations/             # Alembic database migrations
 │   └── web/                    # React 19 + Vite frontend
+├── performance/
+│   ├── Cargo.toml              # Rust Cargo workspace manifest
+│   └── radio-transcriber/      # Rust local-file audio ingestion service (FFmpeg)
 ├── scripts/
 │   └── check_specs.py          # Living specification structure & link validator
 ├── .dockerignore               # Optimized Docker build context filter
