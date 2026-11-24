@@ -43,7 +43,7 @@ Every file in `docs/specs/features/` must appear in this table (enforced by `./r
 | `events-feed` | [events-feed.md](features/events-feed.md) | `active` | `packages/api`, `packages/web`, `packages/db` | Serves `GET /events` and renders the live-polling, time-windowed, searchable incident sidebar |
 | `interactive-map` | [interactive-map.md](features/interactive-map.md) | `active` | `packages/web` | Plots geocoded calls on a Leaflet map with category-colored markers and camera sync |
 | `event-details-and-responders` | [event-details-and-responders.md](features/event-details-and-responders.md) | `active` | `packages/api`, `packages/web`, `packages/db` | Serves `GET /events/{external_id}/responders` and displays incident metadata with responder status timelines |
-| `radio-transcriber` | [radio-transcriber.md](features/radio-transcriber.md) | `experimental` | `performance/radio-transcriber` | Rust service that ingests local audio samples, verifies FFmpeg, and is configured via `INGEST_MODE`/`AUDIO_FILE_PATH`/`SIMULATE_REALTIME` |
+| `radio-transcriber` | [radio-transcriber.md](features/radio-transcriber.md) | `experimental` | `performance/radio-transcriber` | Rust service that decodes local audio samples via FFmpeg into 16kHz `s16le` PCM chunks over an MPSC channel with optional real-time pacing |
 
 ---
 
