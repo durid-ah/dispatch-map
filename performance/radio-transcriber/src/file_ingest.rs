@@ -576,7 +576,9 @@ mod tests {
             assert_eq!(chunk.sample_rate, 16_000);
             assert_eq!(chunk.channels, 1);
             assert_eq!(chunk.source_path, sample.path());
-            assert!(chunk.feed_id.starts_with("radio-transcriber-ingest-resample_eof"));
+            assert!(chunk
+                .feed_id
+                .starts_with("radio-transcriber-ingest-resample_eof"));
         }
     }
 
