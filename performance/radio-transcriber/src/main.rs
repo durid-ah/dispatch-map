@@ -1,19 +1,25 @@
 //! radio-transcriber: local-file audio ingestion service.
 //!
 //! On startup the service resolves its configuration from the environment,
-//! verifies access to the samples directory and the `ffmpeg` binary, and then
-//! waits for a shutdown signal.
+//! verifies access to the samples directory and the `ffmpeg` binary, and runs
+//! the local audio file ingestion pipeline streaming PCM chunks over an MPSC
+//! channel to an asynchronous consumer worker.
 
 mod config;
+mod file_ingest;
 
 use std::path::Path;
 
 use anyhow::{bail, Context, Result};
 use tokio::process::Command;
+use tokio::sync::{mpsc, watch};
 use tracing::{info, warn};
 use tracing_subscriber::EnvFilter;
 
 use crate::config::Config;
+use crate::file_ingest::{AudioChunk, FileAudioIngester, FileIngestConfig};
+
+const CHANNEL_CAPACITY: usize = 32;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -25,6 +31,8 @@ async fn main() -> Result<()> {
     info!(
         ingest_mode = %cfg.ingest_mode,
         audio_file_path = %cfg.audio_file_path.display(),
+        sample_rate = cfg.sample_rate,
+        chunk_duration_ms = cfg.chunk_duration_ms,
         simulate_realtime = cfg.simulate_realtime,
         samples_dir = %cfg.samples_dir.display(),
         "radio-transcriber starting"
@@ -41,19 +49,91 @@ async fn main() -> Result<()> {
     let ffmpeg_version = verify_ffmpeg().await?;
     info!(version = %ffmpeg_version, "ffmpeg is available");
 
-    if tokio::fs::metadata(&cfg.audio_file_path).await.is_ok() {
-        info!(path = %cfg.audio_file_path.display(), "audio file found");
-    } else {
-        warn!(
-            path = %cfg.audio_file_path.display(),
-            "audio file not found; add it to the samples directory"
-        );
+    let ingest_cfg = FileIngestConfig::from(&cfg);
+    let ingester = FileAudioIngester::new(ingest_cfg);
+
+    let (tx, rx) = mpsc::channel::<AudioChunk>(CHANNEL_CAPACITY);
+    let (shutdown_tx, shutdown_rx) = watch::channel(false);
+
+    let signal_handle = tokio::spawn(async move {
+        shutdown_signal().await;
+        info!("shutdown signal received; stopping ingestion pipeline");
+        let _ = shutdown_tx.send(true);
+    });
+
+    let consumer_handle = tokio::spawn(run_consumer(rx, shutdown_rx));
+
+    let ingest_result = ingester.run(tx).await;
+    signal_handle.abort();
+
+    let (chunks_consumed, bytes_consumed) = consumer_handle
+        .await
+        .context("audio consumer task panicked")?;
+
+    let stats = ingest_result?;
+    info!(
+        chunks_sent = stats.chunks_sent,
+        bytes_sent = stats.bytes_sent,
+        chunks_consumed,
+        bytes_consumed,
+        stopped_early = stats.stopped_early,
+        "radio-transcriber finished"
+    );
+    Ok(())
+}
+
+/// Pulls [`AudioChunk`] items from the MPSC channel until the sender finishes
+/// or a shutdown signal is received. Dropping `rx` signals the ingester to
+/// terminate its `ffmpeg` subprocess cleanly.
+async fn run_consumer(
+    mut rx: mpsc::Receiver<AudioChunk>,
+    mut shutdown_rx: watch::Receiver<bool>,
+) -> (u64, u64) {
+    let mut chunks_consumed: u64 = 0;
+    let mut bytes_consumed: u64 = 0;
+
+    loop {
+        tokio::select! {
+            biased;
+            changed = shutdown_rx.changed() => {
+                if changed.is_err() || *shutdown_rx.borrow() {
+                    info!(
+                        chunks_consumed,
+                        bytes_consumed,
+                        "consumer stopping on shutdown signal"
+                    );
+                    break;
+                }
+            }
+            maybe_chunk = rx.recv() => {
+                match maybe_chunk {
+                    Some(chunk) => {
+                        chunks_consumed += 1;
+                        bytes_consumed += chunk.pcm_bytes.len() as u64;
+                        info!(
+                            feed_id = %chunk.feed_id,
+                            sequence = chunk.sequence,
+                            bytes = chunk.pcm_bytes.len(),
+                            sample_rate = chunk.sample_rate,
+                            channels = chunk.channels,
+                            "received PCM audio chunk"
+                        );
+                    }
+                    None => {
+                        info!(
+                            chunks_consumed,
+                            bytes_consumed,
+                            "audio channel closed; consumer finished"
+                        );
+                        break;
+                    }
+                }
+            }
+        }
     }
 
-    info!("ready; waiting for shutdown signal");
-    shutdown_signal().await;
-    info!("shutdown signal received; exiting");
-    Ok(())
+    drop(rx);
+    (chunks_consumed, bytes_consumed)
 }
 
 /// Ensure `dir` exists, is a directory, and is readable. Returns sorted entry names.
