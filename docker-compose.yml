@@ -119,10 +119,12 @@ services:
       INGEST_MODE: ${INGEST_MODE:-file}
       AUDIO_FILE_PATH: ${AUDIO_FILE_PATH:-samples/sample_dispatch.mp3}
       SIMULATE_REALTIME: ${SIMULATE_REALTIME:-true}
+      SAMPLE_RATE: ${SAMPLE_RATE:-16000}
+      CHUNK_DURATION_MS: ${CHUNK_DURATION_MS:-100}
       RUST_LOG: ${RUST_LOG:-info}
     volumes:
       - ./performance/radio-transcriber/samples:/app/samples:ro
-    restart: unless-stopped
+    restart: "no"
 
 volumes:
   dispatch_map_pgdata:

@@ -10,6 +10,9 @@ pub const DEFAULT_INGEST_MODE: &str = "file";
 pub const DEFAULT_AUDIO_FILE_PATH: &str = "samples/sample_dispatch.mp3";
 pub const DEFAULT_SIMULATE_REALTIME: bool = true;
 pub const DEFAULT_SAMPLES_DIR: &str = "samples";
+pub const DEFAULT_SAMPLE_RATE: u32 = 16_000;
+pub const DEFAULT_CHANNELS: u16 = 1;
+pub const DEFAULT_CHUNK_DURATION_MS: u32 = 100;
 
 /// Source from which audio is ingested.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -44,6 +47,8 @@ pub struct Config {
     pub audio_file_path: PathBuf,
     pub simulate_realtime: bool,
     pub samples_dir: PathBuf,
+    pub sample_rate: u32,
+    pub chunk_duration_ms: u32,
 }
 
 impl Config {
@@ -72,11 +77,23 @@ impl Config {
         let samples_dir =
             PathBuf::from(get("SAMPLES_DIR").unwrap_or_else(|| DEFAULT_SAMPLES_DIR.to_string()));
 
+        let sample_rate = match get("SAMPLE_RATE") {
+            Some(raw) => parse_positive_u32(&raw).context("invalid SAMPLE_RATE")?,
+            None => DEFAULT_SAMPLE_RATE,
+        };
+
+        let chunk_duration_ms = match get("CHUNK_DURATION_MS") {
+            Some(raw) => parse_positive_u32(&raw).context("invalid CHUNK_DURATION_MS")?,
+            None => DEFAULT_CHUNK_DURATION_MS,
+        };
+
         Ok(Config {
             ingest_mode,
             audio_file_path,
             simulate_realtime,
             samples_dir,
+            sample_rate,
+            chunk_duration_ms,
         })
     }
 }
@@ -87,6 +104,17 @@ fn parse_bool(raw: &str) -> Result<bool> {
         "false" | "0" | "no" | "off" => Ok(false),
         other => bail!("expected a boolean (true/false/1/0/yes/no), got '{other}'"),
     }
+}
+
+fn parse_positive_u32(raw: &str) -> Result<u32> {
+    let parsed = raw
+        .trim()
+        .parse::<u32>()
+        .with_context(|| format!("expected a positive integer, got '{raw}'"))?;
+    if parsed == 0 {
+        bail!("expected a value greater than 0, got 0");
+    }
+    Ok(parsed)
 }
 
 #[cfg(test)]
@@ -109,13 +137,23 @@ mod tests {
         assert_eq!(cfg.audio_file_path, PathBuf::from(DEFAULT_AUDIO_FILE_PATH));
         assert!(cfg.simulate_realtime);
         assert_eq!(cfg.samples_dir, PathBuf::from(DEFAULT_SAMPLES_DIR));
+        assert_eq!(cfg.sample_rate, DEFAULT_SAMPLE_RATE);
+        assert_eq!(cfg.chunk_duration_ms, DEFAULT_CHUNK_DURATION_MS);
     }
 
     #[test]
     fn empty_values_fall_back_to_defaults() {
-        let cfg = Config::from_env(env(&[("INGEST_MODE", ""), ("AUDIO_FILE_PATH", "  ")])).unwrap();
+        let cfg = Config::from_env(env(&[
+            ("INGEST_MODE", ""),
+            ("AUDIO_FILE_PATH", "  "),
+            ("SAMPLE_RATE", ""),
+            ("CHUNK_DURATION_MS", "  "),
+        ]))
+        .unwrap();
         assert_eq!(cfg.ingest_mode, IngestMode::File);
         assert_eq!(cfg.audio_file_path, PathBuf::from(DEFAULT_AUDIO_FILE_PATH));
+        assert_eq!(cfg.sample_rate, DEFAULT_SAMPLE_RATE);
+        assert_eq!(cfg.chunk_duration_ms, DEFAULT_CHUNK_DURATION_MS);
     }
 
     #[test]
@@ -125,12 +163,16 @@ mod tests {
             ("AUDIO_FILE_PATH", "samples/other.wav"),
             ("SIMULATE_REALTIME", "false"),
             ("SAMPLES_DIR", "/app/samples"),
+            ("SAMPLE_RATE", "8000"),
+            ("CHUNK_DURATION_MS", "250"),
         ]))
         .unwrap();
         assert_eq!(cfg.ingest_mode, IngestMode::File);
         assert_eq!(cfg.audio_file_path, PathBuf::from("samples/other.wav"));
         assert!(!cfg.simulate_realtime);
         assert_eq!(cfg.samples_dir, PathBuf::from("/app/samples"));
+        assert_eq!(cfg.sample_rate, 8_000);
+        assert_eq!(cfg.chunk_duration_ms, 250);
     }
 
     #[test]
@@ -159,5 +201,24 @@ mod tests {
     fn rejects_unsupported_ingest_mode() {
         let err = Config::from_env(env(&[("INGEST_MODE", "stream")])).unwrap_err();
         assert!(err.to_string().contains("unsupported INGEST_MODE"));
+    }
+
+    #[test]
+    fn rejects_invalid_sample_rate() {
+        for bad in ["0", "-16000", "fast"] {
+            let err = Config::from_env(env(&[("SAMPLE_RATE", bad)])).unwrap_err();
+            assert!(format!("{err:#}").contains("SAMPLE_RATE"), "input {bad}");
+        }
+    }
+
+    #[test]
+    fn rejects_invalid_chunk_duration() {
+        for bad in ["0", "-50", "abc"] {
+            let err = Config::from_env(env(&[("CHUNK_DURATION_MS", bad)])).unwrap_err();
+            assert!(
+                format!("{err:#}").contains("CHUNK_DURATION_MS"),
+                "input {bad}"
+            );
+        }
     }
 }
